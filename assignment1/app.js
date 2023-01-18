@@ -1,4 +1,4 @@
-// Displays 'Hello Aman!'
+// Displays 'Hello world!'
 //
 // References:
 //   https://repl.it/languages/express
@@ -11,4 +11,4 @@ app.get('/', (request, response) => {
     response.send('Hello Aman!');
 });
 
-app.listen(port=3000);
+app.listen(3000, () => console.log('server started'));
