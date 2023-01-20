@@ -1,6 +1,6 @@
 # WEB250-Aman-Malik
 
-http://gettingstartedapp-env.eba-xnfwseps.us-east-2.elasticbeanstalk.com/
+http://web250-env.eba-m5ttunar.us-east-2.elasticbeanstalk.com/
 
 ## Assignment 1
 
