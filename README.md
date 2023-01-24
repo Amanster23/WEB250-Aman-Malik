@@ -8,3 +8,4 @@ I am taking this class for two main reasons. One reason is that this class will 
 
 ## Assignment 2
 
+In this session, I learned
