@@ -19,9 +19,10 @@ router.get("/", function (request, response) {
         greeting: "Hello",
         name: "Aman",
         date: date,
-        host:"hi",
-        address: "hi",
-        os: "hi"
+        host:"test",
+        address: "test",
+        os: "test",
+        version: "test"
     }
     let result = template(data);
     response.send(result);
