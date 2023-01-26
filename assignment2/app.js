@@ -31,7 +31,7 @@ const fs = require("fs");
 const app = express();
 app.use(express.static(__dirname + '/static'));
 app.use(express.urlencoded({
-        extended: true
+    extended: true
 }));
 
 // Map routes to all .js files in the /routes folder.

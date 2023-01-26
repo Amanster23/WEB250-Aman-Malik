@@ -14,9 +14,14 @@ const router = express.Router()
 router.get("/", function (request, response) {
     let source = fs.readFileSync("./templates/template.html");
     let template = handlebars.compile(source.toString());
+    let date = new Date();
     let data = {
         greeting: "Hello",
-        name: "world"
+        name: "Aman",
+        date: date,
+        host:"hi",
+        address: "hi",
+        os: "hi"
     }
     let result = template(data);
     response.send(result);
