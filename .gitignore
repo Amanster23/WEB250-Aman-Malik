@@ -38,3 +38,7 @@ npm-debug.log
 
 # WEB 250 ignores
 .zip
+
+# package.json
+package.json
+package-lock.json
