@@ -9,3 +9,7 @@ I am taking this class for two main reasons. One reason is that this class will 
 ## Assignment 2
 
 In this session, I learned about routes and templates. There were many new concepts about server-side scripting that I learned in this assignment. For example, I used node.os for the first time. The node:os module provides operating-system-related utility methods and properties. This helped me a lot to get all the required material needed in my lesson2.js file. I also got a lot of help from the site https://nodejs.org/api/os.html (commented as a resource). I would for sure not be able to get it done without it. I would apply this learning in my world for whenever node.os would seem efficient in a personal/work project. 
+
+## Assignment 3
+
+In this session, I am learning about HTTP GET and HTTP POST request processing. I have learned a little about GET requests in a previous class, but not enough to where I would be comfortable with the topic. For this assignment, I am trying to create a unit converter that converts yards, feet, and inches all together. This is good practice for me though because I can see myself having to use requests like these on different forms for many future projects. So, I would apply this learning in my world for my future projects that will most likely be consisting of some type of form. 
