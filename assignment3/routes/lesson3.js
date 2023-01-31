@@ -16,22 +16,29 @@ const router = express.Router()
 router.get("/", function (request, response) {
     let result = "";
     if (request.query.feet) {
-        let feet = request.query.feet;
-        let yards = feet / 3 ;
-        let inches = feet * 12;
-        result = feet + " feet is " +
-            yards + " yards and " + inches + " inches.";
+      let feet = request.query.feet;
+      let yards = feet / 3;
+      let inches = feet * 12;
+      result = feet + " feet is " + yards + " yards and " + inches + " inches.";
+    } else if (request.query.inches) {
+      let inches = request.query.inches;
+      let feet = inches / 12;
+      let yards = inches / 36;
+      result = inches + " inches is " + feet + " feet and " + yards + " yards ";
     }
-
+  
     let source = fs.readFileSync("./templates/lesson3.html");
     let template = handlebars.compile(source.toString());
     let data = {
-        feet: result,
-        yards: ""
-    }
+      feet: result,
+      yards: "",
+      inches: "",
+    };
     result = template(data);
     response.send(result);
-});
+  });
+
+
 
 router.post("/", function (request, response) {
     let result = "";
@@ -48,6 +55,7 @@ router.post("/", function (request, response) {
     let template = handlebars.compile(source.toString());
     let data = {
         feet: "",
+        inches: "",
         yards: result
     }
     result = template(data);
