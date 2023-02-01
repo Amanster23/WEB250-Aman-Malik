@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>Lesson 3</title>
     <link rel="stylesheet" href="styles.css">
@@ -8,19 +9,25 @@
         body {
             text-align: center;
         }
+
         p {
             min-height: 1em;
         }
+
+        .result {
+            text-align: center;
+        }
     </style>
 </head>
-  <body>
+
+<body>
     <form method="GET">
         <p>
             <label for="feet">Enter feet:</label>
             <input type="text" id="feet" name="feet">
             <input type="submit" value="Convert">
         </p>
-        <p>
+        <p class="result">
             <output>{{feet}}</output>
         </p>
     </form>
@@ -30,19 +37,20 @@
             <input type="text" id="inches" name="inches">
             <input type="submit" value="Convert">
         </p>
-        <p>
+        <p class="result">
             <output>{{inches}}</output>
         </p>
     </form>
-    <form method="POST">
+    <form method="GET">
         <p>
             <label for="yards">Enter yards:</label>
             <input type="text" id="yards" name="yards">
             <input type="submit" value="Convert">
         </p>
-        <p>
+        <p class="result">
             <output>{{yards}}</output>
         </p>
     </form>
 </body>
+
 </html>
