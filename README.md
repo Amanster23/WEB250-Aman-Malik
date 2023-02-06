@@ -13,3 +13,7 @@ In this session, I learned about routes and templates. There were many new conce
 ## Assignment 3
 
 In this session, I am learning about HTTP GET and HTTP POST request processing. I have learned a little about GET requests in a previous class, but not enough to where I would be comfortable with the topic. For this assignment, I am trying to create a unit converter that converts yards, feet, and inches all together. This is good practice for me though because I can see myself having to use requests like these on different forms for many future projects. So, I would apply this learning in my world for my future projects that will most likely be consisting of some type of form. 
+
+## Assignment 4
+
+In this session, we were introduced to condition and loop structures. I am a little familiar with loops from previous assignements, but never fully understood them. For this assignment, I decided to go with the first activity which was creatinng a math expression game. After doing a little bit of it, I can see how it can be very challenging as there is a lot to account for. One aspect I am looking forward to is the hidden elements I will have to use for this activity to keep track of the game progress. That is something I haven't done yet, but I am interested in the process of it. I believe all of this learning will help me in the future whether I have to do something like this or not. 
