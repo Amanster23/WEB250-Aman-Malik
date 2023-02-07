@@ -17,7 +17,9 @@ router.get("/", function (request, response) {
     let template = handlebars.compile(source.toString());
     let data = {
         expression: "",
-        answer: ""
+        answer: "",
+        correct: 0,
+        total: 0
     }
     result = template(data);
     response.send(result);
@@ -27,10 +29,12 @@ router.post("/", function (request, response) {
     let value = Number(request.body.value);
     let numExpressions = Number(request.body.numExpressions);
     let submit = request.body.submit;
+    let correct = Number(request.body.correct);
+    let total = Number(request.body.total);
 
     let result = "";
     if (submit == "Submit") {
-        result = processExpressions(value, numExpressions);
+        result = processExpression(value, correct, total, numExpressions);
     }
     else {
         result = "Unexpected submit value: " + submit;
@@ -39,18 +43,34 @@ router.post("/", function (request, response) {
     let source = fs.readFileSync("./templates/lesson4.html");
     let template = handlebars.compile(source.toString());
     let data = {
-        expression: result,
-        answer: ""
+        expression: result.expression,
+        answer: result.answer,
+        correct: result.correct,
+        total: result.total
     }
     result = template(data);
     response.send(result);
 });
 
-function processExpressions(value, numExpressions) {
+function processExpression(value, correct, total, numExpressions) {
+    if (total >= numExpressions) {
+        return { expression: "", answer: "Game Over. You answered " + correct + " out of " + total + " expressions correctly.", correct: correct, total: total};
+    }
+
     let expression = "";
     let randomOperand = Math.floor(Math.random() * value);
     expression = `${value} + ${randomOperand} = `;
-    return expression;
+    total++;
+
+    let answer = request.body.answer;
+    let correctAnswer = value + randomOperand;
+    let result = "Incorrect. The correct answer is " + correctAnswer + ".";
+    if (answer == correctAnswer) {
+        correct++;
+        result = "Correct!";
+    }
+
+    return { expression: expression, answer: result, correct: correct, total: total };
 }
 
 module.exports = router;
