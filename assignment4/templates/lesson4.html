@@ -32,13 +32,15 @@
     <input type="hidden" name="value" value="{{value}}">
     <input type="hidden" name="numExpressions" value="{{numExpressions}}">
     <input type="hidden" name="currentExpression" value="{{currentExpression}}">
-    <input type="hidden" name="correctAnswers" value="{{correctAnswers}}">
-    <input type="hidden" name="totalAnswers" value="{{totalAnswers}}">
+    <input type="hidden" name="correct" value="{{correct}}">
+    <input type="hidden" name="total" value="{{total}}">
     <br><br>
-    <input type="submit" name="submit" value="Check Answer">
+    <input type="submit" name="submit" value="Submit">
   </form>
-  <p>Answer: {{answer}}</p>
-  <p>Correct answers: {{correctAnswers}} / {{totalAnswers}}</p>
+  <p>{{answer}}</p>
+  <p>Correct answers: {{correct}}</p>
+  <p>Total answers: {{total}}</p>
+
 </body>
 
 </html>
