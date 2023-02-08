@@ -21,7 +21,7 @@ router.get("/", function (request, response) {
         correct: 0,
         total: 0
     }
-    result = template(data);
+    let result = template(data);
     response.send(result);
 });
 
@@ -32,27 +32,25 @@ router.post("/", function (request, response) {
     let correct = Number(request.body.correct);
     let total = Number(request.body.total);
 
-    let result = "";
     if (submit == "Submit") {
-        result = processExpression(value, correct, total, numExpressions);
+        let result = processExpression(value, correct, total, numExpressions, request.body.answer);
+        let source = fs.readFileSync("./templates/lesson4.html");
+        let template = handlebars.compile(source.toString());
+        let data = {
+            expression: result.expression,
+            answer: result.answer,
+            correct: result.correct,
+            total: result.total
+        }
+        result = template(data);
+        response.send(result);
     }
     else {
-        result = "Unexpected submit value: " + submit;
+        response.send("Unexpected submit value: " + submit);
     }
-
-    let source = fs.readFileSync("./templates/lesson4.html");
-    let template = handlebars.compile(source.toString());
-    let data = {
-        expression: result.expression,
-        answer: result.answer,
-        correct: result.correct,
-        total: result.total
-    }
-    result = template(data);
-    response.send(result);
 });
 
-function processExpression(value, correct, total, numExpressions) {
+function processExpression(value, correct, total, numExpressions, answer) {
     if (total >= numExpressions) {
         return { expression: "", answer: "Game Over. You answered " + correct + " out of " + total + " expressions correctly.", correct: correct, total: total};
     }
@@ -62,10 +60,9 @@ function processExpression(value, correct, total, numExpressions) {
     expression = `${value} + ${randomOperand} = `;
     total++;
 
-    let answer = request.body.answer;
     let correctAnswer = value + randomOperand;
     let result = "Incorrect. The correct answer is " + correctAnswer + ".";
-    if (answer == correctAnswer) {
+    if (answer && answer == correctAnswer) {
         correct++;
         result = "Correct!";
     }
@@ -74,4 +71,5 @@ function processExpression(value, correct, total, numExpressions) {
 }
 
 module.exports = router;
+
 
