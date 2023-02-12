@@ -17,3 +17,7 @@ In this session, I am learning about HTTP GET and HTTP POST request processing. 
 ## Assignment 4
 
 In this session, we were introduced to condition and loop structures. I am a little familiar with loops from previous assignements, but never fully understood them. For this assignment, I decided to go with the first activity which was creatinng a math expression game. After doing a little bit of it, I can see how it can be very challenging as there is a lot to account for. One aspect I am looking forward to is the hidden elements I will have to use for this activity to keep track of the game progress. That is something I haven't done yet, but I am interested in the process of it. I believe all of this learning will help me in the future whether I have to do something like this or not. 
+
+## Assignment 5
+
+In this session,
