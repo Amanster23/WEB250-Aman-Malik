@@ -46,7 +46,7 @@ router.post("/", function (request, response) {
 });
 
 function processFile(file) {
-    let result = "<table><tr><th>Celsius</th><th>Fahrenheit</th></tr>";
+    let result = "<table><tr><th>Date</th><th>Storm</th><th>MaximumSustainedWinds</th></tr>";
     let text = file.data.toString();
     let lines = text.trim().split("\n");
 
@@ -62,24 +62,47 @@ function processFile(file) {
 
 function processLine(line) {
     // skip heading
-    let index = line.indexOf("Country,MaximumTemperature");
+    let index = line.indexOf("Date,Storm,MaximumSustainedWinds");
     if (index >= 0) {
         return;
     }
 
-    // find temperature
-    let start = line.indexOf(",");
-    let end = line.indexOf("°C");
-    if (start < 0 || end < 0) {
-        global.forEach += "Invalid file format";
+    let fields = line.split(",");
+    if (fields.length != 3) {
+        global.forEach += "<tr><td colspan='5'>Invalid file format</td></tr>";
         return
     }
 
-    let celsius = Number(line.substring(start + 1, end));
-    let fahrenheit = celsius * 9 / 5 + 32;
+    let date = fields[0];
+    let storm = fields[1];
+    let winds = Number(fields[2]);
 
-    global.forEach += "<tr><td>" + celsius + "</td>";
-    global.forEach += "<td>" + fahrenheit.toFixed(1) + "</td></tr>";
+    let mph = winds * 0.621371;
+    let category = getSaffirSimpsonCategory(winds);
+
+    global.forEach += "<tr><td>" + date + "</td>";
+    global.forEach += "<td>" + storm + "</td>";
+    global.forEach += "<td>" + winds + "</td>";
+    global.forEach += "<td>" + mph.toFixed(1) + "</td>";
+    global.forEach += "<td>" + category + "</td></tr>";
+
+    function getSaffirSimpsonCategory(winds) {
+        let category;
+        if (winds >= 251) {
+            category = "Category 5";
+        } else if (winds >= 210) {
+            category = "Category 4";
+        } else if (winds >= 178) {
+            category = "Category 3";
+        } else if (winds >= 154) {
+            category = "Category 2";
+        } else if (winds >= 119) {
+            category = "Category 1";
+        } else {
+            category = "Tropical Storm";
+        }
+        return category;
+    }
 }
 
 module.exports = router;
