@@ -72,6 +72,11 @@ function processLine(line) {
     let date = fields[0];
     let storm = fields[1];
     let winds = Number(fields[2]);
+    
+    if (isNaN(winds)) {
+        global.forEach += "<tr><td colspan='5'>Invalid winds value: " + fields[2] + "</td></tr>";
+        return;
+    }
 
     let mph = winds * 0.621371;
     let category = getSaffirSimpsonCategory(winds);
