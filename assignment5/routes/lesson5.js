@@ -1,10 +1,6 @@
-// This program reads a user-selected text file of Celsius
-// temperatures and converts the temperatures to Fahrenheit.
-//
-// File format:
-// Country,MaximumTemperature
-// Bulgaria,45.2 °C
-// Canada,45 °C
+// This program reads a user-selected text file of Storm Data
+// and shows the maximum sustained wind in mph and what Saffir Simpson 
+// category it is in.
 //
 //  https://www.mathsisfun.com/temperature-conversion.html
 //  https://en.wikibooks.org/wiki/JavaScript
@@ -76,6 +72,11 @@ function processLine(line) {
     let date = fields[0];
     let storm = fields[1];
     let winds = Number(fields[2]);
+    
+    if (isNaN(winds)) {
+        global.forEach += "<tr><td colspan='5'>Invalid winds value: " + fields[2] + "</td></tr>";
+        return;
+    }
 
     if (isNaN(winds)) {
         global.forEach += "<tr><td>" + date + "</td>";
