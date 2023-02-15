@@ -77,6 +77,15 @@ function processLine(line) {
     let storm = fields[1];
     let winds = Number(fields[2]);
 
+    if (isNaN(winds)) {
+        global.forEach += "<tr><td>" + date + "</td>";
+        global.forEach += "<td>" + storm + "</td>";
+        global.forEach += "<td>" + fields[2] + "</td>";
+        global.forEach += "<td></td>";
+        global.forEach += "<td></td></tr>";
+        return;
+    }
+
     let mph = winds * 0.621371;
     let category = getSaffirSimpsonCategory(winds);
 
