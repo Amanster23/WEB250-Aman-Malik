@@ -66,53 +66,42 @@ function processLine(line) {
     let fields = line.split(",");
     if (fields.length != 3) {
         global.forEach += "<tr><td colspan='5'>Invalid file format</td></tr>";
-        return
+        return;
     }
 
     let date = fields[0];
     let storm = fields[1];
-    let winds = Number(fields[2]);
-    
-    if (isNaN(winds)) {
-        global.forEach += "<tr><td colspan='5'>Invalid winds value: " + fields[2] + "</td></tr>";
-        return;
-    }
+    let windsInKmh = parseInt(fields[2]);
 
-    if (isNaN(winds)) {
-        global.forEach += "<tr><td>" + date + "</td>";
-        global.forEach += "<td>" + storm + "</td>";
-        global.forEach += "<td>" + fields[2] + "</td>";
-        global.forEach += "<td></td>";
-        global.forEach += "<td></td></tr>";
-        return;
-    }
-
-    let mph = winds * 0.621371;
-    let category = getSaffirSimpsonCategory(winds);
+    let windsInMph = parseInt((windsInKmh * 0.621371).toFixed(1));
+    let category = getSaffirSimpsonCategory(windsInKmh);
 
     global.forEach += "<tr><td>" + date + "</td>";
     global.forEach += "<td>" + storm + "</td>";
-    global.forEach += "<td>" + winds + "</td>";
-    global.forEach += "<td>" + mph.toFixed(1) + "</td>";
+    global.forEach += "<td>" + windsInKmh + "km/h" + "</td>";
+    global.forEach += "<td>" + windsInMph.toFixed(1) + "mph" + "</td>";
     global.forEach += "<td>" + category + "</td></tr>";
+}
 
-    function getSaffirSimpsonCategory(winds) {
-        let category;
-        if (winds >= 251) {
-            category = "Category 5";
-        } else if (winds >= 210) {
-            category = "Category 4";
-        } else if (winds >= 178) {
-            category = "Category 3";
-        } else if (winds >= 154) {
-            category = "Category 2";
-        } else if (winds >= 119) {
-            category = "Category 1";
-        } else {
-            category = "Tropical Storm";
-        }
-        return category;
+
+function getSaffirSimpsonCategory(windsInKmh) {
+    let category;
+    if (windsInKmh >= 252) {
+        category = "<span class='category-5'>Category 5</span>";
+    } else if (windsInKmh >= 209) {
+        category = "<span class='category-4'>Category 4</span>";
+    } else if (windsInKmh >= 178) {
+        category = "<span class='category-3'>Category 3</span>";
+    } else if (windsInKmh >= 154) {
+        category = "<span class='category-2'>Category 2</span>";
+    } else if (windsInKmh >= 119) {
+        category = "<span class='category-1'>Category 1</span>";
+    } else if (windsInKmh >= 63) {
+        category = "<span class='tropical-storm'>Tropical Storm</span>";
+    } else {
+        category = "<span class='tropical-depression'>Tropical Depression</span>";
     }
+    return category;
 }
 
 module.exports = router;
