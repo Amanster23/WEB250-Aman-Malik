@@ -21,3 +21,7 @@ In this session, we were introduced to condition and loop structures. I am a lit
 ## Assignment 5
 
 In this session, I started to learn about strings and files. I get familiar with CSV files and using them in my code. CSV files are text files that contains values separated by commas, and it simulates a table where each row is a new line. So far, I have been more comfortable with this assignment than the last one. I feel like it is coming easier to me than before, but that also could be from having more experience now. I am stil tring to figure this assingment out more, but I am pretty confident with where I am at. 
+
+## Assignment 6
+
+In this session, 
