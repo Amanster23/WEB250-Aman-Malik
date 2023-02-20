@@ -24,4 +24,4 @@ In this session, I started to learn about strings and files. I get familiar with
 
 ## Assignment 6
 
-In this session, 
+In this session, I started to learn more about arrays. Arrays are data structures that contain a list of values. I have had some experience with arrays from previous classes, but using it the way we are for this assignment is a new skill. I think because this is similar to the last assignment, I should start to understand this one a lot faster than normal since I was pretty comfortable with the other one. I am looking forward to what all the future assignments are going to look like, and am excited to learn new skills. I hope to use what I learn here in the future in whatever I end up doing that is related to web development.  
