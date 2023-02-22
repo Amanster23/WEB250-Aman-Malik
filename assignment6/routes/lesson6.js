@@ -11,13 +11,13 @@
 //  https://en.wikibooks.org/wiki/JavaScript
 //  https://www.npmjs.com/package/express-fileupload
 
-const express = require('express')
+const express = require('express');
 const fs = require("fs");
 const handlebars = require('handlebars');
-const router = express.Router()
+const router = express.Router();
 
 router.get("/", function (request, response) {
-    let source = fs.readFileSync("./templates/lesson6.html");
+    let source = fs.readFileSync("./templates/lesson5.html");
     let template = handlebars.compile(source.toString());
     let data = {
         table: ""
@@ -37,7 +37,7 @@ router.post("/", function (request, response) {
         result += processFile(file)
     }
 
-    let source = fs.readFileSync("./templates/lesson6.html");
+    let source = fs.readFileSync("./templates/lesson5.html");
     let template = handlebars.compile(source.toString());
     let data = {
         table: result
@@ -47,62 +47,60 @@ router.post("/", function (request, response) {
 });
 
 function processFile(file) {
+    let result = "<table><tr><th>Date</th><th>Storm</th><th>MaximumSustainedWinds</th><th>MaximumSustainedWinds (mph)</th><th>Category</th></tr>";
     let text = file.data.toString();
     let lines = text.trim().split("\n");
-    if (lines[0].toLowerCase().indexOf("country") >= 0) {
-        // remove heading line
-        lines.shift();
-    }
 
-    let table = [];
-    for (let index = 0; index < lines.length; index++) {
-        try {
-            let array = processLine(lines[index]);
-            table.push(array);
+    // build two-dimensional array of storm data
+    let stormData = [];
+    lines.forEach(function(line) {
+        let fields = line.split(",");
+        if (fields.length == 3) {
+            let date = fields[0];
+            let storm = fields[1];
+            let windsInKmh = parseInt(fields[2]);
+
+            let windsInMph = parseInt((windsInKmh * 0.621371).toFixed(1));
+            let category = getSaffirSimpsonCategory(windsInKmh);
+
+            stormData.push([storm, windsInKmh, windsInMph, category]);
         }
-        catch(error) {
-            return error;
-        }
-    }
+    });
 
-    table.sort(function(a, b) {return b[1] - a[1]});
-    result = formatTable(table);
-    return result
-}
+    // sort storm data by storm intensity in decreasing order
+    stormData.sort(function(a, b) {
+        return b[1] - a[1];
+    });
 
-function processLine(line) {
-    let array = line.split(",");
-    if (array.length != 2) {
-        throw "Invalid file format"
-    }
-
-    let celsius = array[1];
-    let index = celsius.indexOf(" °C");
-    if (index < 0) {
-        throw "Invalid file format";
-    }
-
-    celsius = Number(celsius.substring(0, index));
-    array[1] = celsius;
-    let fahrenheit = celsius * 9 / 5 + 32;
-    array.push(fahrenheit)
-    return array;
-}
-
-function formatTable(table) {
-    let result = "<table><tr><th>Country</th>"
-    result += "<th>Celsius</th>";
-    result += "<th>Fahrenheit</th></tr>";
-
-    for (index = 0; index < table.length; index++) {
-        let row = table[index];
-        result += "<tr><td>" + row[0] + "</td>";
-        result += "<td>" + row[1].toFixed(1) + "° C</td>";
-        result += "<td>" + row[2].toFixed(1) + "° F</td></tr>";        
-    }
+    stormData.forEach(function(stormDatum) {
+        result += "<tr><td>" + stormDatum[0] + "</td>";
+        result += "<td>" + stormDatum[1] + "km/h" + "</td>";
+        result += "<td>" + stormDatum[2].toFixed(1) + "mph" + "</td>";
+        result += "<td>" + stormDatum[3] + "</td></tr>";
+    });
 
     result += "</table>";
-    return result;
+    return result
+
+    function getSaffirSimpsonCategory(windsInKmh) {
+        let category;
+        if (windsInKmh >= 252) {
+            category = "<span class='category-5'>Category 5</span>";
+        } else if (windsInKmh >= 209) {
+            category = "<span class='category-4'>Category 4</span>";
+        } else if (windsInKmh >= 178) {
+            category = "<span class='category-3'>Category 3</span>";
+        } else if (windsInKmh >= 154) {
+            category = "<span class='category-2'>Category 2</span>";
+        } else if (windsInKmh >= 119) {
+            category = "<span class='category-1'>Category 1</span>";
+        } else if (windsInKmh >= 63) {
+            category = "<span class='tropical-storm'>Tropical Storm</span>";
+        } else {
+            category = "<span class='tropical-depression'>Tropical Depression</span>";
+        }
+        return category;
+    }
 }
 
 module.exports = router;
