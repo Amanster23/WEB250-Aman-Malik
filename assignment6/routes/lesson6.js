@@ -2,11 +2,6 @@
 // and Celsius temperatures. It displays the data in Celsius
 // and Fahrenheit sorted in descending order by temperature.
 //
-// File format:
-// Country,MaximumTemperature
-// Bulgaria,45.2 °C
-// Canada,45 °C
-//
 //  https://www.mathsisfun.com/temperature-conversion.html
 //  https://en.wikibooks.org/wiki/JavaScript
 //  https://www.npmjs.com/package/express-fileupload
