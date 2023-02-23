@@ -6,6 +6,7 @@ body {
 	line-height: 1.6;
 	margin: 0;
 	min-height: 100vh;
+	background-color: #F7DBA7;
 }
 ul {
   margin: 0;
@@ -15,8 +16,10 @@ ul {
 
 
 a {
-	color: black;
-    text-decoration: none;
+	color: white;
+  	padding: 25px;
+  	letter-spacing:.2em;
+  	text-decoration: none;
 }
 
 .logo {
@@ -25,7 +28,7 @@ a {
 }
 
 .logo a:hover {
-    color: whitesmoke;
+    color: #742700;
 }
 
 .main-nav {
@@ -42,12 +45,12 @@ a {
 }
 
 .main-nav a {
-	color: black;
+	color: white;
 	font-size: .99em;
 }
 
 .main-nav a:hover {
-	color: whitesmoke;
+	color: #742700;
 }
 
 
@@ -55,7 +58,7 @@ a {
 	padding-top: .5em;
 	padding-bottom: .5em;
 	border: 1px solid #a2a2a2;
-	background-color: rgba(124, 124, 124, 0.589);
+	background-color: #F1AB86;
 	-webkit-box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.75);
 	-moz-box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.75);
 	box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.75);
@@ -63,3 +66,16 @@ a {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
+
+.box {
+	border-radius: 25px;
+	background: #C57B57;
+	padding: 20px;
+	width: 200px;
+	height: 150px;
+	text-align: center;
+	margin: auto;
+  }
+  .box h1 {
+	color: white;
+  }

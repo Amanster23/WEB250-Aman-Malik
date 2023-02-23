@@ -12,7 +12,7 @@ const handlebars = require('handlebars');
 const router = express.Router();
 
 router.get("/", function (request, response) {
-    let source = fs.readFileSync("./templates/lesson5.html");
+    let source = fs.readFileSync("./templates/lesson6.html");
     let template = handlebars.compile(source.toString());
     let data = {
         table: ""
@@ -32,7 +32,7 @@ router.post("/", function (request, response) {
         result += processFile(file)
     }
 
-    let source = fs.readFileSync("./templates/lesson5.html");
+    let source = fs.readFileSync("./templates/lesson6.html");
     let template = handlebars.compile(source.toString());
     let data = {
         table: result
