@@ -1,0 +1,162 @@
+[{
+    "Date": "1970-11-03T00:00:00Z",
+    "Storm": "1970 Bhola cyclone",
+    "MaximumSustainedWinds": "240 km/h"
+}, {
+    "Date": "1988-08-05T00:00:00Z",
+    "Storm": "Tropical Storm Alberto",
+    "MaximumSustainedWinds": "65 km/h"
+}, {
+    "Date": "1990-02-12T00:00:00Z",
+    "Storm": "Cyclone Peni",
+    "MaximumSustainedWinds": "130 km/h"
+}, {
+    "Date": "1992-10-23T00:00:00Z",
+    "Storm": "Hurricane Frances",
+    "MaximumSustainedWinds": "140 km/h"
+}, {
+    "Date": "2000-08-17T00:00:00Z",
+    "Storm": "Tropical Storm Chris",
+    "MaximumSustainedWinds": "65 km/h"
+}, {
+    "Date": "2001-09-07T00:00:00Z",
+    "Storm": "Hurricane Felix",
+    "MaximumSustainedWinds": "185 km/h"
+}, {
+    "Date": "2002-08-25T00:00:00Z",
+    "Storm": "Hurricane Ele",
+    "MaximumSustainedWinds": "140 km/h"
+}, {
+    "Date": "2002-08-25T00:00:00Z",
+    "Storm": "Hurricane Ele",
+    "MaximumSustainedWinds": "203.7 km/h"
+}, {
+    "Date": "2002-08-27T00:00:00Z",
+    "Storm": "Hurricane Ele",
+    "MaximumSustainedWinds": "140 km/h"
+}, {
+    "Date": "2002-08-27T00:00:00Z",
+    "Storm": "Hurricane Ele",
+    "MaximumSustainedWinds": "203.7 km/h"
+}, {
+    "Date": "2002-08-29T00:00:00Z",
+    "Storm": "Tropical Storm Dolly",
+    "MaximumSustainedWinds": "95 km/h"
+}, {
+    "Date": "2003-07-16T00:00:00Z",
+    "Storm": "Hurricane Danny",
+    "MaximumSustainedWinds": "120 km/h"
+}, {
+    "Date": "2004-08-27T00:00:00Z",
+    "Storm": "Tropical storm Hermine",
+    "MaximumSustainedWinds": "95 km/h"
+}, {
+    "Date": "2004-11-29T00:00:00Z",
+    "Storm": "Tropical storm Otto",
+    "MaximumSustainedWinds": "85 km/h"
+}, {
+    "Date": "2005-08-02T00:00:00Z",
+    "Storm": "Tropical Storm Harvey",
+    "MaximumSustainedWinds": "100 km/h"
+}, {
+    "Date": "2005-08-28T00:00:00Z",
+    "Storm": "Tropical Storm Lee",
+    "MaximumSustainedWinds": "65 km/h"
+}, {
+    "Date": "2005-09-23T00:00:00Z",
+    "Storm": "Tropical Storm Norma",
+    "MaximumSustainedWinds": "92.6 km/h"
+}, {
+    "Date": "2006-07-31T00:00:00Z",
+    "Storm": "Tropical Storm Gilma",
+    "MaximumSustainedWinds": "64.8 km/h"
+}, {
+    "Date": "2006-08-01T00:00:00Z",
+    "Storm": "Hurricane Hector",
+    "MaximumSustainedWinds": "175.9 km/h"
+}, {
+    "Date": "2006-09-14T00:00:00Z",
+    "Storm": "Tropical Storm Miriam",
+    "MaximumSustainedWinds": "74.1 km/h"
+}, {
+    "Date": "2006-10-09T00:00:00Z",
+    "Storm": "Tropical Storm Olivia",
+    "MaximumSustainedWinds": "74.1 km/h"
+}, {
+    "Date": "2006-11-08T00:00:00Z",
+    "Storm": "Tropical Storm Rosa",
+    "MaximumSustainedWinds": "64.8 km/h"
+}, {
+    "Date": "2009-03-24T00:00:00Z",
+    "Storm": "Tropical storm Jade",
+    "MaximumSustainedWinds": "110 km/h"
+}, {
+    "Date": "2009-03-24T00:00:00Z",
+    "Storm": "Tropical storm Jade",
+    "MaximumSustainedWinds": "120 km/h"
+}, {
+    "Date": "2009-10-06T00:00:00Z",
+    "Storm": "Tropical Storm Henri (2009)",
+    "MaximumSustainedWinds": "85 km/h"
+}, {
+    "Date": "2015-08-17T00:00:00Z",
+    "Storm": "Hurricane Kilo",
+    "MaximumSustainedWinds": "80 km/h"
+}, {
+    "Date": "2015-08-17T00:00:00Z",
+    "Storm": "Hurricane Kilo",
+    "MaximumSustainedWinds": "222.2 km/h"
+}, {
+    "Date": "2015-08-20T00:00:00Z",
+    "Storm": "Hurricane Kilo",
+    "MaximumSustainedWinds": "80 km/h"
+}, {
+    "Date": "2015-08-20T00:00:00Z",
+    "Storm": "Hurricane Kilo",
+    "MaximumSustainedWinds": "222.2 km/h"
+}, {
+    "Date": "2019-03-04T00:00:00Z",
+    "Storm": "Cyclone Idai",
+    "MaximumSustainedWinds": "195 km/h"
+}, {
+    "Date": "2019-03-04T00:00:00Z",
+    "Storm": "Cyclone Idai",
+    "MaximumSustainedWinds": "205 km/h"
+}, {
+    "Date": "2019-11-05T00:00:00Z",
+    "Storm": "Cyclone Bulbul",
+    "MaximumSustainedWinds": "140 km/h"
+}, {
+    "Date": "2019-12-03T00:00:00Z",
+    "Storm": "Cyclone Ambali",
+    "MaximumSustainedWinds": "220 km/h"
+}, {
+    "Date": "2019-12-03T00:00:00Z",
+    "Storm": "Cyclone Ambali",
+    "MaximumSustainedWinds": "260 km/h"
+}, {
+    "Date": "2020-10-11T00:00:00Z",
+    "Storm": "Tropical Storm Nangka",
+    "MaximumSustainedWinds": "95 km/h"
+}, {
+    "Date": "2021-01-01T00:00:00Z",
+    "Storm": "Cyclone Imogen",
+    "MaximumSustainedWinds": "85 km/h"
+}, {
+    "Date": "2021-07-03T00:00:00Z",
+    "Storm": "Tropical Depression Emong (2021)",
+    "MaximumSustainedWinds": "55 km/h"
+}, {
+    "Date": "2021-09-01T00:00:00Z",
+    "Storm": "Tropical Depression 17W (2021)",
+    "MaximumSustainedWinds": "55 km/h"
+}, {
+    "Date": "2021-12-14T00:00:00Z",
+    "Storm": "Tropical Depression 29W (2021)",
+    "MaximumSustainedWinds": "55 km/h"
+}, {
+    "Date": "2022-01-24T00:00:00Z",
+    "Storm": "Cyclone Batsirai",
+    "MaximumSustainedWinds": "195 km/h"
+}]
+

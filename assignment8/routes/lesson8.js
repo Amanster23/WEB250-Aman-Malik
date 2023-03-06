@@ -1,86 +1,82 @@
-// This program reads a user-selected text file of countries
+// This program reads JSON data from Wikidata with countries
 // and Celsius temperatures. It displays the data in Celsius
-// and Fahrenheit sorted in descending order by temperature.
+// and Fahrenheit sorted in decending order by temperature.
 //
+// References:
 //  https://www.mathsisfun.com/temperature-conversion.html
 //  https://en.wikibooks.org/wiki/JavaScript
-//  https://www.npmjs.com/package/express-fileupload
+//  https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service
+//  https://hackersandslackers.com/making-api-requests-with-nodejs/
+//  https://zellwk.com/blog/async-await-express/
 
 const express = require('express');
 const fs = require("fs");
 const handlebars = require('handlebars');
 const router = express.Router();
 
-router.get("/", function (request, response) {
-    let source = fs.readFileSync("./templates/lesson7.html");
-    let template = handlebars.compile(source.toString());
-    let data = {
-        table: ""
-    }
-    result = template(data);
-    response.send(result);
+router.get('/', (req, res) => {
+  const source = fs.readFileSync('./templates/lesson8.html');
+  const template = handlebars.compile(source.toString());
+  const data = {
+    table: '',
+  };
+  const result = template(data);
+  res.send(result);
 });
 
-router.post("/", function (request, response) {
-    let result = "";
+router.post('/', (req, res) => {
+  let result = '';
 
-    if (!request.files || Object.keys(request.files).length == 0) {
-        result = "No file selected"
-    } else {
-        let file = request.files.file;
-        result += "<h2>" + file.name + "</h2>";
-        result += processFile(file)
-    }
+  if (!req.files || Object.keys(req.files).length === 0) {
+    result = 'No file selected';
+  } else {
+    const file = req.files.file;
+    result += '<h2>' + file.name + '</h2>';
+    result += processFile(file);
+  }
 
-    let source = fs.readFileSync("./templates/lesson7.html");
-    let template = handlebars.compile(source.toString());
-    let data = {
-        table: result
-    }
-    result = template(data);
-    response.send(result);
+  const source = fs.readFileSync('./templates/lesson8.html');
+  const template = handlebars.compile(source.toString());
+  const data = {
+    table: result,
+  };
+  const output = template(data);
+  res.send(output);
 });
 
 function processFile(file) {
-    let result = "<table><tr><th>Storm</th><th>MaximumSustainedWinds</th><th>MaximumSustainedWinds</th><th>Category</th></tr>";
-    let text = file.data.toString();
-    let lines = text.trim().split("\n");
+  let result = '<table><tr><th>Storm</th><th>MaximumSustainedWinds</th><th>MaximumSustainedWinds</th><th>Category</th></tr>';
 
-    // build associative array of storm data
-    let stormData = [];
-    lines.forEach(function(line) {
-        let fields = line.split(",");
-        if (fields.length == 3) {
-            let storm = fields[1];
-            let windsInKmh = parseInt(fields[2]);
+  const jsonData = fs.readFileSync('./lesson8.json', 'utf8');
+  const json = JSON.parse(jsonData);
 
-            let windsInMph = parseInt((windsInKmh * 0.621371).toFixed(1));
-            let category = getSaffirSimpsonCategory(windsInKmh);
+  const stormData = [];
 
-            let stormObj = {
-                storm: storm,
-                windsInKmh: windsInKmh,
-                windsInMph: windsInMph,
-                category: category
-            };
-            stormData.push(stormObj);
-        }
-    });
+  json.forEach((line) => {
+    const windsInKmh = parseInt(line.windsInKmh);
+    const windsInMph = parseInt((windsInKmh * 0.621371).toFixed(1));
+    const category = getSaffirSimpsonCategory(windsInKmh);
 
-    // sort storm data by storm intensity in decreasing order
-    stormData.sort(function(a, b) {
-        return b.windsInKmh - a.windsInKmh;
-    });
+    const stormObj = {
+      storm: line.storm,
+      windsInKmh,
+      windsInMph,
+      category,
+    };
+    stormData.push(stormObj);
+  });
 
-    stormData.forEach(function(stormObj) {
-        result += "<tr><td>" + stormObj.storm + "</td>";
-        result += "<td>" + stormObj.windsInKmh + "km/h" + "</td>";
-        result += "<td>" + stormObj.windsInMph + "mph" + "</td>";
-        result += "<td>" + stormObj.category + "</td></tr>";
-    });
+  stormData.sort((a, b) => b.windsInKmh - a.windsInKmh);
 
-    result += "</table>";
-    return result
+  stormData.forEach((stormObj) => {
+    result += '<tr><td>' + stormObj.storm + '</td>';
+    result += '<td>' + stormObj.windsInKmh + 'km/h' + '</td>';
+    result += '<td>' + stormObj.windsInMph + 'mph' + '</td>';
+    result += '<td>' + stormObj.category + '</td></tr>';
+  });
+
+  result += '</table>';
+  return result;
 
     function getSaffirSimpsonCategory(windsInKmh) {
         let category;
