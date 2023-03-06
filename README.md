@@ -28,4 +28,4 @@ In this session, I started to learn more about arrays. Arrays are data structure
 
 ## Assignment 7
 
-In this session, I got to learn about associative arrays, or better know as objects in JavaScript. This wasn't completely new to me, so this assignment went by super quick. All I had to do was take last week's assignment and change the two-dimensional array into an object. From there, I just made sure everything was defined with the new object, and it all worked fine. I can see how this can be useful for future projects, so I will keep these in mind. 
+In this session, I got to learn about associative arrays, better known as objects in JavaScript. This was not entirely new for me, so this assignment went by super quickly. All I had to do was take last week's assignment and change the two-dimensional array into an object. From there, I ensured everything was defined with the new object, and everything worked fine. I can see how this can be useful for future projects, so I will keep these in mind.
