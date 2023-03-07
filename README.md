@@ -29,3 +29,7 @@ In this session, I started to learn more about arrays. Arrays are data structure
 ## Assignment 7
 
 In this session, I got to learn about associative arrays, better known as objects in JavaScript. This was not entirely new for me, so this assignment went by super quickly. All I had to do was take last week's assignment and change the two-dimensional array into an object. From there, I ensured everything was defined with the new object, and everything worked fine. I can see how this can be useful for future projects, so I will keep these in mind.
+
+## Assignment 8
+
+In this session, I got to learn about Internet data sources and JSNO concepts. JSON is based on a subset of JavaScript and is commonly used with JavaScript, but it is a language-independent format. So far in the assignment, I am still trying to figure out on how to get it all to work. I have come across some issues that I've figured out, so I'm sure with more time, I can start to understand more. I am looking forward to getting more comfortable with JSON, as I know this language can be very helpful in certain aspects. 
