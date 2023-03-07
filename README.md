@@ -32,4 +32,4 @@ In this session, I got to learn about associative arrays, better known as object
 
 ## Assignment 8
 
-In this session, I got to learn about Internet data sources and JSNO concepts. JSON is based on a subset of JavaScript and is commonly used with JavaScript, but it is a language-independent format. So far in the assignment, I am still trying to figure out on how to get it all to work. I have come across some issues that I've figured out, so I'm sure with more time, I can start to understand more. I am looking forward to getting more comfortable with JSON, as I know this language can be very helpful in certain aspects. 
+In this session, I got to learn about Internet data sources and JSON concepts. JSON is based on a subset of JavaScript and is commonly used with JavaScript, but it is a language-independent format. So far in the assignment, I am still trying to figure out on how to get it all to work. I have come across some issues that I've figured out, so I'm sure with more time, I can start to understand more. I am looking forward to getting more comfortable with JSON, as I know this language can be very helpful in certain aspects. 
