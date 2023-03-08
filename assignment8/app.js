@@ -29,23 +29,24 @@ const app = express();
 
 app.use(express.static(__dirname + '/static'));
 app.use(express.urlencoded({
-        extended: true
+  extended: true
 }));
 
 app.use(fileUpload({
-    limits: { fileSize: 1 * 1024 * 1024 },
+  limits: {
+    fileSize: 1 * 1024 * 1024
+  },
 }));
 
 const fs = require("fs");
 fs.readdirSync('./routes').forEach((filename) => {
-    try {
-      const module = require(`./routes/${filename}`);
-      const route = filename.replace('.js', '');
-      app.use(`/${route}`, module);
-    } catch (err) {
-      console.error(`Error loading route module ${filename}:`, err);
-    }
-  });
+  try {
+    const module = require(`./routes/${filename}`);
+    const route = filename.replace('.js', '');
+    app.use(`/${route}`, module);
+  } catch (err) {
+    console.error(`Error loading route module ${filename}:`, err);
+  }
+});
 
 app.listen(3000, () => console.log('server started'));
-

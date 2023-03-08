@@ -17,12 +17,34 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const source = fs.readFileSync('./templates/lesson8.html');
   const template = handlebars.compile(source.toString());
+  const jsonData = fs.readFileSync('./routes/lesson8.json', 'utf8');
+  const json = JSON.parse(jsonData);
+  const stormData = [];
+
+  json.forEach((line) => {
+    const windsInKmh = parseInt(line.MaximumSustainedWinds);
+    const windsInMph = parseInt((windsInKmh * 0.621371).toFixed(1));
+    const category = getSaffirSimpsonCategory(windsInKmh);
+
+    const stormObj = {
+      storm: line.Storm,
+      windsInKmh,
+      windsInMph,
+      category,
+    };
+    stormData.push(stormObj);
+  });
+
+  stormData.sort((a, b) => b.windsInKmh - a.windsInKmh);
+
   const data = {
-    table: '',
+    table: generateTable(stormData),
   };
+
   const result = template(data);
   res.send(result);
 });
+
 
 router.post('/', (req, res) => {
   let result = '';
@@ -32,7 +54,7 @@ router.post('/', (req, res) => {
   } else {
     const file = req.files.file;
     result += '<h2>' + file.name + '</h2>';
-    result += processFile(file);
+    result += generateTable(JSON.parse(file.data));
   }
 
   const source = fs.readFileSync('./templates/lesson8.html');
@@ -44,59 +66,40 @@ router.post('/', (req, res) => {
   res.send(output);
 });
 
-function processFile(file) {
+function generateTable(stormData) {
   let result = '<table><tr><th>Storm</th><th>MaximumSustainedWinds</th><th>MaximumSustainedWinds</th><th>Category</th></tr>';
-
-  const jsonData = fs.readFileSync('./lesson8.json', 'utf8');
-  const json = JSON.parse(jsonData);
-
-  const stormData = [];
-
-  json.forEach((line) => {
-    const windsInKmh = parseInt(line.windsInKmh);
-    const windsInMph = parseInt((windsInKmh * 0.621371).toFixed(1));
-    const category = getSaffirSimpsonCategory(windsInKmh);
-
-    const stormObj = {
-      storm: line.storm,
-      windsInKmh,
-      windsInMph,
-      category,
-    };
-    stormData.push(stormObj);
-  });
-
-  stormData.sort((a, b) => b.windsInKmh - a.windsInKmh);
 
   stormData.forEach((stormObj) => {
     result += '<tr><td>' + stormObj.storm + '</td>';
     result += '<td>' + stormObj.windsInKmh + 'km/h' + '</td>';
-    result += '<td>' + stormObj.windsInMph + 'mph' + '</td>';
+    result += '<td>' + stormObj.windsInMph + 'mp/h' + '</td>';
     result += '<td>' + stormObj.category + '</td></tr>';
   });
 
+  stormData.sort((a, b) => b.windsInKmh - a.windsInKmh);
+
   result += '</table>';
   return result;
+}
 
-    function getSaffirSimpsonCategory(windsInKmh) {
-        let category;
-        if (windsInKmh >= 252) {
-            category = "<span class='category-5'>Category 5</span>";
-        } else if (windsInKmh >= 209) {
-            category = "<span class='category-4'>Category 4</span>";
-        } else if (windsInKmh >= 178) {
-            category = "<span class='category-3'>Category 3</span>";
-        } else if (windsInKmh >= 154) {
-            category = "<span class='category-2'>Category 2</span>";
-        } else if (windsInKmh >= 119) {
-            category = "<span class='category-1'>Category 1</span>";
-        } else if (windsInKmh >= 63) {
-            category = "<span class='tropical-storm'>Tropical Storm</span>";
-        } else {
-            category = "<span class='tropical-depression'>Tropical Depression</span>";
-        }
-        return category;
-    }
+function getSaffirSimpsonCategory(windsInKmh) {
+  let category;
+  if (windsInKmh >= 252) {
+    category = "<span class='category-5'>Category 5</span>";
+  } else if (windsInKmh >= 209) {
+    category = "<span class='category-4'>Category 4</span>";
+  } else if (windsInKmh >= 178) {
+    category = "<span class='category-3'>Category 3</span>";
+  } else if (windsInKmh >= 154) {
+    category = "<span class='category-2'>Category 2</span>";
+  } else if (windsInKmh >= 119) {
+    category = "<span class='category-1'>Category 1</span>";
+  } else if (windsInKmh >= 63) {
+    category = "<span class='tropical-storm'>Tropical Storm</span>";
+  } else {
+    category = "<span class='tropical-depression'>Tropical Depression</span>";
+  }
+  return category;
 }
 
 module.exports = router;
