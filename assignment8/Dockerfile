@@ -15,7 +15,7 @@ FROM node:alpine
 WORKDIR /usr/src/app
 
 COPY . .
-RUN npm install express handlebars os express-fileupload
+RUN npm install express handlebars os express-fileupload node-fetch
 
 EXPOSE 3000
 CMD ["node", "app.js"]
