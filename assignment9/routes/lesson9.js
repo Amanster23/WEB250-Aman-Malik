@@ -21,8 +21,7 @@ router.get("/", async (request, response) => {
     try {
         await checkDatabase();
         result = await getOrderData();
-    }
-    catch(error) {
+    } catch (error) {
         result = error;
     }
 
@@ -48,8 +47,7 @@ router.post("/", async (request, response) => {
         await insertOrderDetails(order_id, toppings);
 
         result = await getOrderData();
-    }
-    catch(error) {
+    } catch (error) {
         result = error;
     }
 
@@ -102,22 +100,35 @@ async function checkDatabase() {
     await sqliteRun(sql, parameters);
 }
 
-async function getData() {
+async function getOrderData() {
     let sql = `
-            SELECT ID, Country, Temperature FROM Countries;
-        `
+        SELECT 
+            Orders.ID AS OrderID, 
+            Customers.Name AS CustomerName, 
+            Customers.Address AS CustomerAddress,
+            Orders.Size AS Size,
+            GROUP_CONCAT(OrderDetails.Topping, ', ') AS Toppings
+        FROM Orders
+        JOIN Customers ON Orders.CustomerID = Customers.ID
+        JOIN OrderDetails ON Orders.ID = OrderDetails.OrderID
+        GROUP BY Orders.ID;
+     `
     let parameters = {};
     let rows = await sqliteAll(sql, parameters);
 
-    let result = "<table><tr><th>ID</th>";
-    result += "<th>Country</th>";
-    result += "<th>Temperature</th></tr>";
+    let result = "<table><tr><th>Order ID</th>";
+    result += "<th>Customer Name</th>";
+    result += "<th>Customer Address</th>";
+    result += "<th>Size</th>";
+    result += "<th>Toppings</th></tr>";
     for (i = 0; i < rows.length; i++) {
-        result += "<tr><td>" + rows[i].ID + "</td>"
-        result += "<td>" + rows[i].Country + "</td>"
-        result += "<td>"+ rows[i].Temperature + "</td></tr>"
+        result += "<tr><td>" + rows[i].OrderID + "</td>"
+        result += "<td>" + rows[i].CustomerName + "</td>"
+        result += "<td>" + rows[i].CustomerAddress + "</td></tr>"
+        result += "<td>" + rows[i].Size + "</td>"
+        result += "<td>" + rows[i].Toppings + "</td>"
     }
-    result += "</table>"    
+    result += "</table>"
     return result;
 }
 
@@ -175,7 +186,7 @@ async function sqliteAll(sql, parameters) {
     let promise = new Promise((resolve, reject) => {
         let database = new sqlite3.Database(DATABASE);
         database.serialize();
-        database.all(sql, parameters, function(error, rows) {
+        database.all(sql, parameters, function (error, rows) {
             if (error)
                 reject(error);
             else
@@ -192,7 +203,7 @@ async function sqliteRun(sql, parameters) {
     let promise = new Promise((resolve, reject) => {
         let database = new sqlite3.Database(DATABASE);
         database.serialize();
-        database.run(sql, parameters, function(error, rows) {
+        database.run(sql, parameters, function (error, rows) {
             if (error)
                 reject(error);
             else
