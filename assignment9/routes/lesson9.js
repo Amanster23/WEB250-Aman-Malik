@@ -75,8 +75,9 @@ async function checkDatabase() {
         CREATE TABLE Customers(
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Name TEXT NOT NULL,
-            Address TEXT NOT NULL;
-        `
+            Address TEXT NOT NULL
+        );
+    `
     parameters = {};
     await sqliteRun(sql, parameters);
 
@@ -86,7 +87,8 @@ async function checkDatabase() {
             CustomerID INTEGER NOT NULL,
             Size TEXT NOT NULL,
             FOREIGN KEY (CustomerID) REFERENCES Customers(ID)
-        `
+        );
+    `
     parameters = {};
     await sqliteRun(sql, parameters);
 
@@ -95,7 +97,8 @@ async function checkDatabase() {
             OrderID INTEGER NOT NULL,
             Topping TEXT NOT NULL,
             FOREIGN KEY (OrderID) REFERENCES Orders(ID)
-        `
+        );
+    `
     parameters = {};
     await sqliteRun(sql, parameters);
 }
@@ -132,54 +135,40 @@ async function getOrderData() {
     return result;
 }
 
-async function countryExists(country) {
+async function insertOrder(customer_name, customer_address, pizza_size) {
     let sql = `
-            SELECT EXISTS(
-                SELECT * FROM Countries
-                WHERE Country = $country) AS Count;
+            INSERT INTO Customers (Name, Address)
+            VALUES (?, ?);
         `
-    let parameters = {
-        $country: country
-    };
-    let rows = await sqliteAll(sql, parameters);
-    let result = !!rows[0].Count;
-    return result;
+    let parameters = [customer_name, customer_address];
+    let result = await sqliteRun(sql, parameters);
+    let customer_id = result.lastID;
+
+    sql = `
+            INSERT INTO Orders (CustomerID, Size)
+            VALUES (?, ?);
+        `
+    parameters = [customer_id, pizza_size];
+    result = await sqliteRun(sql, parameters);
+    return result.lastID;
 }
 
-async function insertCountry(country, temperature) {
+async function insertOrderDetails(order_id, toppings) {
+    let topping_array = toppings.split(",");
     let sql = `
-            INSERT INTO Countries (Country, Temperature)
-            VALUES($country, $temperature);
+            INSERT INTO OrderDetails (OrderID, Topping) 
+            VALUES (?, ?); 
         `
-    let parameters = {
-        $country: country,
-        $temperature: temperature
-    };
-    await sqliteRun(sql, parameters);
-}
-
-async function updateCountry(country, temperature) {
-    let sql = `
-            UPDATE Countries
-            SET Temperature = $temperature
-            WHERE Country = $country;
-        `
-    let parameters = {
-        $country: country,
-        $temperature: temperature
-    };
-    await sqliteRun(sql, parameters);
-}
-
-async function deleteCountry(country) {
-    let sql = `
-            DELETE FROM Countries
-            WHERE Country = $country;
-        `
-    let parameters = {
-        $country: country
-    };
-    await sqliteRun(sql, parameters);
+    let parameters = [];
+    for (i = 0; i < topping_array.length; i++) {
+        let topping = topping_array[i].trim();
+        if (topping.length > 0) {
+            parameters.push(order_id);
+            parameters.push(topping);
+            await sqliteRun(sql, parameters);
+            parameters = [];
+        }
+    }
 }
 
 async function sqliteAll(sql, parameters) {
