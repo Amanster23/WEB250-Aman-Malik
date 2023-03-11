@@ -65,7 +65,7 @@ router.post("/", async (request, response) => {
 async function checkDatabase() {
     let sql = `
             SELECT COUNT(*) AS Count FROM sqlite_master
-            WHERE name = 'Countries';
+            WHERE name = 'Customers';
         `
     let parameters = {};
     let rows = await sqliteAll(sql, parameters);
@@ -74,10 +74,29 @@ async function checkDatabase() {
     }
 
     sql = `
-        CREATE TABLE Countries(
+        CREATE TABLE Customers(
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
-            Country TEXT UNIQUE NOT NULL,
-            Temperature REAL NOT NULL);
+            Name TEXT NOT NULL,
+            Address TEXT NOT NULL;
+        `
+    parameters = {};
+    await sqliteRun(sql, parameters);
+
+    sql = `
+        CREATE TABLE Orders(
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            CustomerID INTEGER NOT NULL,
+            Size TEXT NOT NULL,
+            FOREIGN KEY (CustomerID) REFERENCES Customers(ID)
+        `
+    parameters = {};
+    await sqliteRun(sql, parameters);
+
+    sql = `
+        CREATE TABLE OrderDetails(
+            OrderID INTEGER NOT NULL,
+            Topping TEXT NOT NULL,
+            FOREIGN KEY (OrderID) REFERENCES Orders(ID)
         `
     parameters = {};
     await sqliteRun(sql, parameters);
