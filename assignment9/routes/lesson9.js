@@ -41,7 +41,7 @@ router.post("/", async (request, response) => {
         let customer_name = request.body.customer_name.trim();
         let customer_address = request.body.customer_address.trim();
         let pizza_size = request.body.pizza_size.trim();
-        let toppings = request.body.toppings.trim();
+        let toppings = request.body.toppings.filter(Boolean).join(", ");
 
         let order_id = await insertOrder(customer_name, customer_address, pizza_size);
         await insertOrderDetails(order_id, toppings);
@@ -134,7 +134,6 @@ async function getOrderData() {
     result += "</table>"
     return result;
 }
-
 async function insertOrder(customer_name, customer_address, pizza_size) {
     let sql = `
             INSERT INTO Customers (Name, Address)
