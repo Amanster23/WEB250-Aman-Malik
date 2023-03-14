@@ -33,3 +33,7 @@ In this session, I got to learn about associative arrays, better known as object
 ## Assignment 8
 
 In this session, I got to learn about Internet data sources and JSON concepts. JSON is based on a subset of JavaScript and is commonly used with JavaScript, but it is a language-independent format. So far in the assignment, I am still trying to figure out on how to get it all to work. I have come across some issues that I've figured out, so I'm sure with more time, I can start to understand more. I am looking forward to getting more comfortable with JSON, as I know this language can be very helpful in certain aspects. 
+
+## Assignment 9
+
+In this session, I got to start learning and dealing with SQL databases. After some practice on W3, I am enjoying the use of SQL. SQL commands are instructions used to communicate with a database to perform tasks, functions, and queries with data. For the assignment, I decided to go with SQLite as it makes more sense on a smaller project like this. SQLite is an open-source, zero-configuration, self-contained, stand-alone, transaction relational database engine designed to be embedded into an application. I am enjoying this assignment so far, but am struggling with the "Cannot POST /" error. Once I can figure that out, I'm sure this assignment will be easier to get through. 
