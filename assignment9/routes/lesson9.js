@@ -43,6 +43,11 @@ router.post("/", async (request, response) => {
         let pizza_size = request.body.pizza_size.trim();
         let toppings = request.body.toppings.filter(Boolean).join(", ");
 
+        // Check if any field is empty
+        if (!customer_name || !customer_address || !pizza_size || !toppings) {
+            throw new Error("All fields are required.");
+        }
+
         let order_id = await insertOrder(customer_name, customer_address, pizza_size);
         await insertOrderDetails(order_id, toppings);
 
@@ -191,17 +196,20 @@ async function sqliteRun(sql, parameters) {
     let promise = new Promise((resolve, reject) => {
         let database = new sqlite3.Database(DATABASE);
         database.serialize();
-        database.run(sql, parameters, function (error, rows) {
+        database.run(sql, parameters, function (error, result) {
             if (error)
                 reject(error);
             else
-                resolve(rows);
+                resolve(result);
         });
         database.close();
     });
 
     let result = await promise;
-    return result;
+    return {
+        lastID: result.lastID
+    };
 }
+
 
 module.exports = router;
