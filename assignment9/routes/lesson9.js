@@ -99,6 +99,7 @@ async function checkDatabase() {
 
     sql = `
         CREATE TABLE OrderDetails(
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
             OrderID INTEGER NOT NULL,
             Topping TEXT NOT NULL,
             FOREIGN KEY (OrderID) REFERENCES Orders(ID)
@@ -110,16 +111,17 @@ async function checkDatabase() {
 
 async function getOrderData() {
     let sql = `
-        SELECT 
-            Orders.ID AS OrderID, 
-            Customers.Name AS CustomerName, 
-            Customers.Address AS CustomerAddress,
-            Orders.Size AS Size,
-            GROUP_CONCAT(OrderDetails.Topping, ', ') AS Toppings
-        FROM Orders
-        JOIN Customers ON Orders.CustomerID = Customers.ID
-        JOIN OrderDetails ON Orders.ID = OrderDetails.OrderID
-        GROUP BY Orders.ID;
+    SELECT 
+        Orders.ID AS OrderID, 
+        Customers.ID AS CustomerID,
+        Customers.Name AS CustomerName, 
+        Customers.Address AS CustomerAddress,
+        Orders.Size AS Size,
+        GROUP_CONCAT(OrderDetails.Topping, ', ') AS Toppings
+    FROM Orders
+    JOIN Customers ON Orders.CustomerID = Customers.ID
+    JOIN OrderDetails ON Orders.ID = OrderDetails.OrderID
+    GROUP BY Orders.ID;
      `
     let parameters = {};
     let rows = await sqliteAll(sql, parameters);
@@ -131,10 +133,11 @@ async function getOrderData() {
     result += "<th>Toppings</th></tr>";
     for (i = 0; i < rows.length; i++) {
         result += "<tr><td>" + rows[i].OrderID + "</td>"
+        result += "<td>" + rows[i].CustomerID + "</td>"
         result += "<td>" + rows[i].CustomerName + "</td>"
-        result += "<td>" + rows[i].CustomerAddress + "</td></tr>"
+        result += "<td>" + rows[i].CustomerAddress + "</td>"
         result += "<td>" + rows[i].Size + "</td>"
-        result += "<td>" + rows[i].Toppings + "</td>"
+        result += "<td>" + rows[i].Toppings + "</td></tr>"
     }
     result += "</table>"
     return result;
@@ -154,7 +157,9 @@ async function insertOrder(customer_name, customer_address, pizza_size) {
         `
     parameters = [customer_id, pizza_size];
     result = await sqliteRun(sql, parameters);
-    return result.lastID;
+    let order_id = result.lastID;
+
+    return order_id;
 }
 
 async function insertOrderDetails(order_id, toppings) {
@@ -169,7 +174,8 @@ async function insertOrderDetails(order_id, toppings) {
         if (topping.length > 0) {
             parameters.push(order_id);
             parameters.push(topping);
-            await sqliteRun(sql, parameters);
+            let result = await sqliteRun(sql, parameters);
+            order_id = result.lastID;
             parameters = [];
         }
     }
@@ -192,23 +198,18 @@ async function sqliteAll(sql, parameters) {
     return result;
 }
 
-async function sqliteRun(sql, parameters) {
-    let promise = new Promise((resolve, reject) => {
+function sqliteRun(sql, parameters) {
+    return new Promise((resolve, reject) => {
         let database = new sqlite3.Database(DATABASE);
-        database.serialize();
-        database.run(sql, parameters, function (error, result) {
-            if (error)
-                reject(error);
-            else
-                resolve(result);
+        database.run(sql, parameters, function(err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(this);
+            }
         });
         database.close();
     });
-
-    let result = await promise;
-    return {
-        lastID: result.lastID
-    };
 }
 
 
