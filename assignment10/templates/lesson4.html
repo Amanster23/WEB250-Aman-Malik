@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lesson 4</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    p {
+      min-height: 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Math Quiz</h1>
+        {{#if expression}}
+        <p>{{expression}}</p>
+        <form method="post">
+            <input type="text" name="answer" placeholder="Enter your answer">
+            <br><br>
+            <input type="hidden" name="value" value="{{value}}">
+            <input type="hidden" name="correct" value="{{correct}}">
+            <input type="hidden" name="total" value="{{total}}">
+            <input type="hidden" name="numExpressions" value="{{numExpressions}}">
+            <input type="submit" name="submit" value="Submit">
+        </form>
+        {{/if}}
+        {{#if answer}}
+        <p>{{answer}}</p>
+        {{/if}}
+        {{#if total}}
+        <p>You answered {{correct}} out of {{total}} expressions correctly.</p>
+        {{/if}}
+        {{#unless expression}}
+        <form method="post">
+            <input type="text" name="value" placeholder="Enter the value">
+            <br><br>
+            <input type="text" name="numExpressions" placeholder="Enter the number of expressions">
+            <br><br>
+            <input type="submit" name="submit" value="Submit">
+        </form>
+        {{/unless}}
+</body>
+
+</html>

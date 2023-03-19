@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson 6</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        p {
+            min-height: 1em;
+        }
+
+        .category-5 {
+            background-color: #ff6060;
+        }
+
+        .category-4 {
+            background-color: #ff8f21;
+        }
+
+        .category-3 {
+            background-color: #ffc140;
+        }
+
+        .category-2 {
+            background-color: #fee775;
+        }
+
+        .category-1 {
+            background-color: #ffffcd;
+        }
+
+        .tropical-storm {
+            background-color: #00fbf4;
+        }
+
+        .tropical-depression {
+            background-color: #5dbaff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Storm Wind Speed Conversion and Category</h1>
+    <p>Select a file of Storm data with their wind speeds for conversion and what category it is in:</p>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" id="file" name="file">
+        <input type="submit">
+    </form>
+    {{{table}}}
+</body>
+
+</html>
