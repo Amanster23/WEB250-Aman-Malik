@@ -37,3 +37,7 @@ In this session, I got to learn about Internet data sources and JSON concepts. J
 ## Assignment 9
 
 In this session, I got to start learning and dealing with SQL databases. After some practice on W3, I am enjoying the use of SQL. SQL commands are instructions used to communicate with a database to perform tasks, functions, and queries with data. For the assignment, I decided to go with SQLite as it makes more sense on a smaller project like this. SQLite is an open-source, zero-configuration, self-contained, stand-alone, transaction relational database engine designed to be embedded into an application. I am enjoying this assignment so far, but am struggling with the "Cannot POST /" error. Once I can figure that out, I'm sure this assignment will be easier to get through. 
+
+## Assignment 10
+
+In this session, I started to learn about MongoDB and Redis. MongoDB is a document database that stores data in JSON-like documents. It supports arrays and nested objects as values. Redis also can be used to store JSON data. It has a few drawbacks, but it is another option for Redis to store data. After testing them both out, I am leaning towards MongoDB. I am still trying to figure it all out, but so far I have gotten some data to display on my local host page. There is still more I have to do, but I am looking forward to the challenge. 
