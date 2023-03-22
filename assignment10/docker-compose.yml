@@ -1,0 +1,17 @@
+# References:
+# https://en.wikiversity.org/wiki/Docker/Compose
+
+version: "2"
+services:
+  express-server:
+    container_name: express-server
+    build: .
+    ports:
+      - "80:3000"
+    depends_on:
+      - mongo-server
+  mongo-server:
+    container_name: mongo-server
+    image: mongo
+    ports:
+      - "27017:27017"
