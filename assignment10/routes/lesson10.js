@@ -11,27 +11,6 @@ const fs = require("fs");
 const handlebars = require('handlebars');
 const mongodb = require("mongodb")
 const router = express.Router();
-// const mongoose = require('mongoose');
-// const Schema = mongoose.Schema;
-
-// const pizzaSchema = new Schema({
-//     size: {
-//         type: String,
-//         required: true
-//     },
-//     topping: {
-//         type: String,
-//         required: true
-//     },
-//     price: {
-//         type: String,
-//         required: true
-//     },
-// });
-
-// const Pizza = mongoose.model('Pizza', pizzaSchema);
-// module.exports = Pizza; 
-
 
 // Requires a Mongo installation to manage the database.
 // Use of a Docker container is recommended.
@@ -41,7 +20,7 @@ const router = express.Router();
 // If the Node website and/or Mongo are running locally, use 127.0.0.1
 // for the mongodb host address.
 
-const HOST = "mongodb://mongo-server";
+const HOST = "mongodb://127.0.0.1:27017";
 const DATABASE = "temperature";
 const COLLECTION = "countries";
 
@@ -50,8 +29,7 @@ router.get("/", async (request, response) => {
 
     try {
         result = await getData();
-    }
-    catch(error) {
+    } catch (error) {
         result = error;
     }
 
@@ -80,8 +58,7 @@ router.post("/", async (request, response) => {
         }
 
         result = await getData();
-    }
-    catch(error) {
+    } catch (error) {
         result = error;
     }
 
@@ -99,7 +76,8 @@ async function getData() {
     await client.connect();
     const database = client.db(DATABASE);
     const collection = database.collection(COLLECTION);
-    const documents = await getDocuments(collection);
+    const documents = await collection.find().toArray();
+
 
     let result = "<table><tr><th>ID</th>";
     result += "<th>Country</th>";
@@ -107,22 +85,11 @@ async function getData() {
     for (i = 0; i < documents.length; i++) {
         result += "<tr><td>" + documents[i]._id + "</td>";
         result += "<td>" + documents[i].country + "</td>";
-        result += "<td>"+ documents[i].temperature + "</td></tr>";
+        result += "<td>" + documents[i].temperature + "</td></tr>";
     }
     result += "</table>";
     await client.close();
     return result;
-}
-
-async function getDocuments(collection) {
-    return new Promise(function(resolve, reject) {
-       collection.find().toArray( function(err, documents) {
-        if (err)
-            reject(err);
-        else
-            resolve(documents);
-        });
-    });
 }
 
 async function countryExists(country) {
@@ -160,7 +127,9 @@ async function updateCountry(country, temperature) {
         country: country
     };
     const update = {
-        "$set": { "temperature": temperature }
+        "$set": {
+            "temperature": temperature
+        }
     };
     await collection.updateOne(filter, update);
     await client.close();

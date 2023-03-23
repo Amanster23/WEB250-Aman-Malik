@@ -24,45 +24,8 @@
 
 const express = require("express");
 const fileUpload = require('express-fileupload');
-// const mongoose = require('mongoose');
-// const Pizza = require('./routes/lesson10')
 
 const app = express();
-
-// connect to MongoDB
-
-// const dbURL = 'mongodb+srv://amanster23:Monsterking23@pizza.wlpmpex.mongodb.net/?retryWrites=true&w=majority'
-// mongoose.connect((dbURL))
-// .then((result) => app.listen(3000, () => console.log('server started')))
-// .catch((err) => console.log(err));
-
-// // mongoose and mongo sandbox routes
-
-// app.get('/add-pizza', (req, res) => {
-//   const pizza = new Pizza({
-//     size: 'small',
-//     topping: 'cheese',
-//     price: '5'
-//   });
-
-//   pizza.save()
-//   .then((result) => {
-//     res.send(result)
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   })
-// })
-
-// app.get('/all-pizzas', (req, res) => {
-//   Pizza.find()
-//   .then((result) => {
-//     res.send(result);
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   })
-// })
 
 app.use(express.static(__dirname + '/static'));
 app.use(express.urlencoded({
