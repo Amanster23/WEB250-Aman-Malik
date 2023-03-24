@@ -5,6 +5,7 @@ version: "2"
 services:
   express-server:
     container_name: express-server
+    restart: always
     build: .
     ports:
       - "80:3000"
