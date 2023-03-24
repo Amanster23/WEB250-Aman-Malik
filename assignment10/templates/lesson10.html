@@ -8,20 +8,34 @@
 </head>
 
 <body>
-    <h1>Temperature Data Entry</h1>
-    <p>Enter country and temperature. Enter again to update.</p>
-    <p>Enter country without temperature to delete.</p>
-    <form method="POST">
-        <p><label for="country">Country:</label>
-            <input type="text" id="country" name="country" required>
-        </p>
-        <p><label for="stop">Temperature:</label>
-            <input type="text" id="temperature" name="temperature">
-        </p>
-        <p><input type="submit" name="submit" value="Submit"></p>
-    </form>
-    <hr>
+    <h1>Employee Data</h1>
+    {{#if table}}
     {{{table}}}
+    {{else}}
+    <p>No data available.</p>
+    {{/if}}
+
+    <form method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name"><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+
+        <label for="employee_status">Employee Status:</label>
+        <input type="radio" name="employee_status" value="employee" id="employee">
+        <label for="employee">Employee</label>
+
+        <input type="radio" name="employee_status" value="manager" id="manager">
+        <label for="manager">Manager</label>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <p style="font-weight: bold;">Enter username and employee status again to delete the data.</p>
 </body>
 
 </html>
