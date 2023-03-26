@@ -13,7 +13,7 @@ const mongodb = require("mongodb")
 const bcrypt = require('bcrypt');
 const router = express.Router();
 
-const HOST = "mongodb://127.0.0.1";
+const HOST = "mongodb://172.17.0.2:27017";
 const DATABASE = "pizza-order-app";
 const COLLECTION = "employees";
 const SALT_ROUNDS = 10;
