@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson 9</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Pizza Orders</h1>
+    <form method="POST">
+        <label for="customer_name">Customer Name:</label>
+        <input type="text" id="customer_name" name="customer_name"><br>
+
+        <label for="customer_address">Customer Address:</label>
+        <input type="text" id="customer_address" name="customer_address"><br>
+
+        <label for="pizza_size">Pizza Size:</label>
+        <select id="pizza_size" name="pizza_size">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select><br>
+
+          <label>Toppings:</label><br>
+          <input type="checkbox" id="pepperoni" name="toppings[]" value="pepperoni">
+          <label for="pepperoni">Pepperoni</label><br>
+          <input type="checkbox" id="mushrooms" name="toppings[]" value="mushrooms">
+          <label for="mushrooms">Mushrooms</label><br>
+          <input type="checkbox" id="onions" name="toppings[]" value="onions">
+          <label for="onions">Onions</label><br>
+          <input type="checkbox" id="sausage" name="toppings[]" value="sausage">
+          <label for="sausage">Sausage</label><br>
+          <input type="checkbox" id="bacon" name="toppings[]" value="bacon">
+          <label for="bacon">Bacon</label><br>
+          <input type="checkbox" id="extra-cheese" name="toppings[]" value="extra cheese">
+          <label for="extra-cheese">Extra Cheese</label><br>
+          <input type="checkbox" id="black-olives" name="toppings[]" value="black olives">
+          <label for="black-olives">Black Olives</label><br>
+
+
+        <input type="submit" value="Submit">
+    </form>
+    {{{table}}}
+</body>
+
+</html>
