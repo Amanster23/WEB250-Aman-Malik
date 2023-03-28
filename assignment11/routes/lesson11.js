@@ -18,10 +18,16 @@ const router = express.Router();
 users = [
     // Password is the same as the username, just salted and hashed.
     // Don't do this in a production application! Use custom passwords.
-    { "userid": 1, "username": "admin", 
-        "password": "$2b$10$l20wKFNqyzWl9NgeexjQ9el9KY7HzbTAPefSyntaZE.jqJlHZI0Ba" },
-    { "userid": 2, "username": "test", 
-        "password": "$2b$10$T.7DuAdfGVzq8uP1.xYZLe8rbPrOE6/DtMqbT5.O/bYwTFMZDC6ru" }
+    {
+        "userid": 1,
+        "username": "admin",
+        "password": "$2b$10$l20wKFNqyzWl9NgeexjQ9el9KY7HzbTAPefSyntaZE.jqJlHZI0Ba"
+    },
+    {
+        "userid": 2,
+        "username": "test",
+        "password": "$2b$10$T.7DuAdfGVzq8uP1.xYZLe8rbPrOE6/DtMqbT5.O/bYwTFMZDC6ru"
+    }
 ]
 
 router.get("/", function (request, response) {
@@ -34,21 +40,20 @@ router.get("/", function (request, response) {
 router.post("/", function (request, response) {
     if (request.body["reload"]) {
         response.redirect(request.originalUrl);
-    }
-    else if (request.body["log-out"]) {
+    } else if (request.body["log-out"]) {
         request.session.destroy();
         let username = request.cookies.username;
         let userid = null;
         result = build_form(username, userid);
         response.send(result);
-    }
-    else if (request.body["forget-me"]) {
+    } else if (request.body["forget-me"]) {
         request.session.destroy();
         result = build_form(null, null);
-        response.cookie("username", "", { expires: 0 });
+        response.cookie("username", "", {
+            expires: 0
+        });
         response.send(result);
-    }
-    else {
+    } else {
         let username = request.body.username;
         let password = request.body.password;
         let userid = authenticateUser(username, password);
@@ -56,9 +61,8 @@ router.post("/", function (request, response) {
             request.session.userid = userid;
             result = build_form(username, userid);
             response.cookie("username", username);
-            response.send(result);    
-        }
-        else {
+            response.send(result);
+        } else {
             response.redirect(303, request.originalUrl);
         }
     }
@@ -69,11 +73,9 @@ function build_form(username, userid) {
     let session = !!userid;
     if (username && userid) {
         welcome = "Welcome back " + username + "! You are logged in.";
-    }
-    else if (username) {
+    } else if (username) {
         welcome = "Welcome back " + username + "! Please log in.";
-    }
-    else {
+    } else {
         welcome = "Welcome! Please log in.";
     }
 
@@ -92,25 +94,32 @@ function build_form(username, userid) {
 function authenticateUser(username, password) {
     for (let index = 0; index < users.length; index++) {
         let user = users[index];
+        console.log(`Checking user ${user.username}...`);
         if (user.username == username) {
+            console.log(`Found user ${username}...`);
+            console.log("Hashed Password:", user.password);
             if (bcrypt.compareSync(password, user.password)) {
+                console.log(`User ${username} authenticated successfully!`);
                 // Should track successful logins
                 return user.userid;
             } else {
+                console.log(`User ${username} authentication failed!`);
                 // Should track failed attempts, lock account, etc.
                 return null;
             }
-        }        
+        }
     }
+    console.log(`User ${username} not found!`);
     return null;
 }
+
 
 function generateHashedPassword(password) {
     // Use this function to generate hashed passwords to save in 
     // the users list or a database.
     let salt = bcrypt.genSaltSync();
     let hashed = bcrypt.hashSync(password, salt);
-    return hashed    
-}    
+    return hashed
+}
 
 module.exports = router;

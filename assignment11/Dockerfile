@@ -15,7 +15,7 @@ FROM node:alpine
 WORKDIR /usr/src/app
 
 COPY . .
-RUN npm install express handlebars os express-fileupload node-fetch@2 sqlite3 mongodb bcrypt
+RUN npm install express handlebars os express-fileupload node-fetch@2 sqlite3 mongodb bcrypt cookie-parser express-session crypto
 
 EXPOSE 3000
 CMD ["node", "app.js"]
