@@ -33,7 +33,8 @@ users = [
 router.get("/", function (request, response) {
     let username = request.cookies.username;
     let userid = request.session.userid;
-    result = build_form(username, userid);
+    let contact = request.cookies.contact;
+    result = build_form(username, userid, contact);
     response.send(result);
 });
 
@@ -44,12 +45,15 @@ router.post("/", function (request, response) {
         request.session.destroy();
         let username = request.cookies.username;
         let userid = null;
-        result = build_form(username, userid);
+        result = build_form(username, userid, null);
         response.send(result);
     } else if (request.body["forget-me"]) {
         request.session.destroy();
-        result = build_form(null, null);
+        result = build_form(null, null, null);
         response.cookie("username", "", {
+            expires: 0
+        });
+        response.cookie("contact", "", {
             expires: 0
         });
         response.send(result);
@@ -59,8 +63,16 @@ router.post("/", function (request, response) {
         let userid = authenticateUser(username, password);
         if (userid) {
             request.session.userid = userid;
-            result = build_form(username, userid);
+            let contact = null;
+            if (request.cookies.contact) {
+                contact = JSON.parse(request.cookies.contact);
+            }
+            result = build_form(username, userid, contact);
             response.cookie("username", username);
+            if (request.body.contact) {
+                let contactInfo = JSON.stringify(request.body.contact);
+                response.cookie("contact", contactInfo);
+            }
             response.send(result);
         } else {
             response.redirect(303, request.originalUrl);
@@ -68,7 +80,7 @@ router.post("/", function (request, response) {
     }
 });
 
-function build_form(username, userid) {
+function build_form(username, userid, contact) {
     let cookie = !!username;
     let session = !!userid;
     if (username && userid) {
@@ -85,7 +97,8 @@ function build_form(username, userid) {
         cookie: cookie,
         session: session,
         welcome: welcome,
-        username: username
+        username: username,
+        contact: contact
     }
     result = template(data);
     return result
@@ -113,7 +126,6 @@ function authenticateUser(username, password) {
     return null;
 }
 
-
 function generateHashedPassword(password) {
     // Use this function to generate hashed passwords to save in 
     // the users list or a database.
@@ -123,3 +135,4 @@ function generateHashedPassword(password) {
 }
 
 module.exports = router;
+
