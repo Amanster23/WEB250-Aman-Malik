@@ -66,6 +66,7 @@ router.post("/", function (request, response) {
             let contact = null;
             if (request.cookies.contact) {
                 contact = JSON.parse(request.cookies.contact);
+                console.log('Returning customer contact info:', contact);
             }
             result = build_form(username, userid, contact);
             response.cookie("username", username);
@@ -107,10 +108,10 @@ function build_form(username, userid, contact) {
 function authenticateUser(username, password) {
     for (let index = 0; index < users.length; index++) {
         let user = users[index];
-        console.log(`Checking user ${user.username}...`);
+        // console.log(`Checking user ${user.username}...`);
         if (user.username == username) {
-            console.log(`Found user ${username}...`);
-            console.log("Hashed Password:", user.password);
+            // console.log(`Found user ${username}...`);
+            // console.log("Hashed Password:", user.password);
             if (bcrypt.compareSync(password, user.password)) {
                 console.log(`User ${username} authenticated successfully!`);
                 // Should track successful logins
