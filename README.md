@@ -41,3 +41,7 @@ In this session, I got to start learning and dealing with SQL databases. After s
 ## Assignment 10
 
 In this session, I started to learn about MongoDB and Redis. MongoDB is a document database that stores data in JSON-like documents. It supports arrays and nested objects as values. Redis also can be used to store JSON data. It has a few drawbacks, but it is another option for Redis to store data. After testing them both out, I am leaning towards MongoDB. I am still trying to figure it all out, but so far I have gotten some data to display on my local host page. There is still more I have to do, but I am looking forward to the challenge.
+
+## Assignment 11
+
+In this session, we started to learn about cookies and sessions. A cookie is a piece of data stored on users computer/web browser by the web browser. A session is a series of related browser requests that come from the same client during a certain time period. Cookies are stored on your computer by websites via the browser. When you revisit a site, the browser sends those cookies to that site so that the site can serve you customized information based on your previous activity on the site. During the assignment, I started to understand a little more with the use of the example code. I am still working on it, but I am excited to figure it all out. 
