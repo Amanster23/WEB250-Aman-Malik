@@ -21,20 +21,25 @@ users = [
     {
         "userid": 1,
         "username": "admin",
-        "password": "$2b$10$l20wKFNqyzWl9NgeexjQ9el9KY7HzbTAPefSyntaZE.jqJlHZI0Ba"
+        "password": "$2b$10$l20wKFNqyzWl9NgeexjQ9el9KY7HzbTAPefSyntaZE.jqJlHZI0Ba",
+        "role": "manager"
     },
     {
         "userid": 2,
         "username": "test",
-        "password": "$2b$10$T.7DuAdfGVzq8uP1.xYZLe8rbPrOE6/DtMqbT5.O/bYwTFMZDC6ru"
+        "password": "$2b$10$T.7DuAdfGVzq8uP1.xYZLe8rbPrOE6/DtMqbT5.O/bYwTFMZDC6ru",
+        "role": "employee"
     }
 ]
+
+loginAttempts = []
 
 router.get("/", function (request, response) {
     let username = request.cookies.username;
     let userid = request.session.userid;
     let contact = request.cookies.contact;
-    result = build_form(username, userid, contact);
+    let role = request.session.role;
+    result = build_form(username, userid, contact, role);
     response.send(result);
 });
 
@@ -42,14 +47,16 @@ router.post("/", function (request, response) {
     if (request.body["reload"]) {
         response.redirect(request.originalUrl);
     } else if (request.body["log-out"]) {
+        recordLogout(request);
         request.session.destroy();
         let username = request.cookies.username;
         let userid = null;
-        result = build_form(username, userid, null);
+        result = build_form(username, userid, null, null);
         response.send(result);
     } else if (request.body["forget-me"]) {
+        recordLogout(request);
         request.session.destroy();
-        result = build_form(null, null, null);
+        result = build_form(null, null, null, null);
         response.cookie("username", "", {
             expires: 0
         });
@@ -62,13 +69,16 @@ router.post("/", function (request, response) {
         let password = request.body.password;
         let userid = authenticateUser(username, password);
         if (userid) {
+            let user = getUserById(userid);
             request.session.userid = userid;
+            request.session.role = user.role;
+            recordLogin(request, user);
             let contact = null;
             if (request.cookies.contact) {
                 contact = JSON.parse(request.cookies.contact);
                 console.log('Returning customer contact info:', contact);
             }
-            result = build_form(username, userid, contact);
+            result = build_form(username, userid, contact, user.role);
             response.cookie("username", username);
             if (request.body.contact) {
                 let contactInfo = JSON.stringify(request.body.contact);
@@ -76,20 +86,28 @@ router.post("/", function (request, response) {
             }
             response.send(result);
         } else {
+            recordFailedLogin(request, username);
             response.redirect(303, request.originalUrl);
         }
     }
 });
 
-function build_form(username, userid, contact) {
+function build_form(username, userid, contact, role) {
     let cookie = !!username;
     let session = !!userid;
+    let welcome;
+    let employeeContent = "";
+    let managerContent = "";
+
     if (username && userid) {
         welcome = "Welcome back " + username + "! You are logged in.";
-    } else if (username) {
-        welcome = "Welcome back " + username + "! Please log in.";
+        if (role === "employee") {
+            employeeContent = "This is the employee content.";
+        } else if (role === "manager") {
+            managerContent = "This is the manager content.";
+        }
     } else {
-        welcome = "Welcome! Please log in.";
+        welcome = "Please log in.";
     }
 
     let source = fs.readFileSync("./templates/lesson11.html");
@@ -98,6 +116,8 @@ function build_form(username, userid, contact) {
         cookie: cookie,
         session: session,
         welcome: welcome,
+        employeeContent: employeeContent,
+        managerContent: managerContent,
         username: username,
         contact: contact
     }
@@ -127,6 +147,51 @@ function authenticateUser(username, password) {
     return null;
 }
 
+function getUserById(userid) {
+    for (let index = 0; index < users.length; index++) {
+        let user = users[index];
+        if (user.userid == userid) {
+            return user;
+        }
+    }
+    return null;
+}
+
+function recordLogin(request, user) {
+    let loginEvent = {
+        "username": user.username,
+        "timestamp": new Date(),
+    };
+    console.log("User " + user.username + " logged in at " + loginEvent.timestamp);
+}
+
+function recordFailedLogin(request, username) {
+    let loginEvent = {
+        "username": username,
+        "timestamp": new Date(),
+    };
+    console.log("User " + username + " failed to log in at " + loginEvent.timestamp);
+}
+
+function recordLogout(request) {
+    let username = request.cookies.username;
+    let logoutEvent = {
+        "username": username,
+        "timestamp": new Date(),
+    };
+    console.log("User " + username + " logged out at " + logoutEvent.timestamp);
+}
+
+function getUserById(userid) {
+    for (let index = 0; index < users.length; index++) {
+        let user = users[index];
+        if (user.userid == userid) {
+            return user;
+        }
+    }
+    return null;
+}
+
 function generateHashedPassword(password) {
     // Use this function to generate hashed passwords to save in 
     // the users list or a database.
@@ -136,4 +201,3 @@ function generateHashedPassword(password) {
 }
 
 module.exports = router;
-
