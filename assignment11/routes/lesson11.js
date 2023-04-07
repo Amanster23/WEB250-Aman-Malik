@@ -13,7 +13,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const handlebars = require("handlebars");
-const sqlite3 = require("sqlite3").verbose();
+const sqlite3 = require("sqlite3");
 const router = express.Router();
 
 // Open a database connection
@@ -29,12 +29,48 @@ db.run(`
   )
 `);
 
+// Add an employee user to the database
+const employeeUsername = "employee1";
+const employeePassword = "password1";
+const employeeRole = "employee";
+bcrypt.hash(employeePassword, 10, function (err, hash) {
+    db.run(
+        "INSERT OR IGNORE INTO users (username, password, role) VALUES (?, ?, ?)",
+        [employeeUsername, hash, employeeRole],
+        function (err) {
+            if (err) {
+                console.error(err.message);
+            } else {
+                console.log(`Employee user ${employeeUsername} added to the database`);
+            }
+        }
+    );
+});
+
+// Add a manager user to the database
+const managerUsername = "manager1";
+const managerPassword = "password2";
+const managerRole = "manager";
+bcrypt.hash(managerPassword, 10, function (err, hash) {
+    db.run(
+        "INSERT OR IGNORE INTO users (username, password, role) VALUES (?, ?, ?)",
+        [managerUsername, hash, managerRole],
+        function (err) {
+            if (err) {
+                console.error(err.message);
+            } else {
+                console.log(`Manager user ${managerUsername} added to the database`);
+            }
+        }
+    );
+});
+
 router.get("/", function (request, response) {
     let username = request.cookies.username;
     let userid = request.session.userid;
     let contact = request.cookies.contact;
     let role = request.session.role;
-    result = build_form(username, userid, contact, role);
+    result = build_form(username, userid, contact, role); // Pass the role property to build_form
     response.send(result);
 });
 
@@ -96,14 +132,15 @@ function build_form(username, userid, contact, role) {
 
     if (username && userid) {
         welcome = "Welcome back " + username + "! You are logged in.";
-        if (role === "employee") {
+        if (role === `employee`) {
             employeeContent = "This is the employee content.";
-        } else if (role === "manager") {
+        } else if (role === `manager`) {
             managerContent = "This is the manager content.";
         }
+        console.log("The value of role is:", role);
     } else {
         welcome = "Please log in.";
-    }    
+    }
 
     let source = fs.readFileSync("./templates/lesson11.html");
     let template = handlebars.compile(source.toString());
@@ -115,10 +152,12 @@ function build_form(username, userid, contact, role) {
         managerContent: managerContent,
         username: username,
         contact: contact,
+        role: role, // Add the role property to the data object
     };
     result = template(data);
     return result;
 }
+
 
 function authenticateUser(username, password) {
     return new Promise((resolve, reject) => {
@@ -177,30 +216,23 @@ function recordLogout(request) {
 
 function getUserById(userid) {
     return new Promise((resolve, reject) => {
-      db.get(
-        "SELECT * FROM users WHERE userid = ?",
-        [userid],
-        function (err, row) {
-          if (err) {
-            console.error(err.message);
-            reject(err);
-          } else if (!row) {
-            console.log(`User with id ${userid} not found`);
-            resolve(false);
-          } else {
-            const user = {
-              userid: row.userid,
-              username: row.username,
-              role: row.role,
-            };
-            console.log(`User ${user.username} retrieved from database`);
-            resolve(user);
-          }
-        }
-      );
+        db.get(
+            "SELECT userid, username, password, role FROM users WHERE userid = ?",
+            [userid],
+            function (err, row) {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            }
+        );
     });
-  }
-  
+}
+
+
+
 function generateHashedPassword(password) {
     // Use this function to generate hashed passwords to save in 
     // the users list or a database.
