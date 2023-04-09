@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson 10</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Employee Data</h1>
+    {{#if table}}
+    {{{table}}}
+    {{else}}
+    <p>No data available.</p>
+    {{/if}}
+
+    <form method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name"><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+
+        <label for="employee_status">Employee Status:</label>
+        <input type="radio" name="employee_status" value="employee" id="employee">
+        <label for="employee">Employee</label>
+
+        <input type="radio" name="employee_status" value="manager" id="manager">
+        <label for="manager">Manager</label>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <p style="font-weight: bold;">Enter username and employee status again to delete the data.</p>
+</body>
+
+</html>
