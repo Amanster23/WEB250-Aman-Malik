@@ -109,7 +109,7 @@ router.post("/", function (request, response) {
                 contact = JSON.parse(request.cookies.contact);
                 console.log("Returning customer contact info:", contact);
             }
-            result = build_form(username, userid, contact, user.role);
+            result = build_form(username, userid, contact, user.role, true);
             response.cookie("username", username);
             if (request.body.contact) {
                 let contactInfo = JSON.stringify(request.body.contact);
@@ -117,6 +117,7 @@ router.post("/", function (request, response) {
             }
             response.send(result);
         } else {
+            result = build_form(null, null, null, null, false);
             recordFailedLogin(request, username);
             response.redirect(303, request.originalUrl);
         }
@@ -124,43 +125,44 @@ router.post("/", function (request, response) {
     }
 });
 
-function build_form(username, userid, contact, role) {
+function build_form(username, userid, contact, role, loggedIn) {
     let cookie = !!username;
     let session = !!userid;
     let welcome;
     let employeeContent = "";
     let managerContent = "";
-
-    if (username && userid) {
-        welcome = "Welcome back " + username + "! You are logged in.";
-        if (role === `employee`) {
-            employeeContent = "This is the employee content.";
-        } else if (role === `manager`) {
-            managerContent = "This is the manager content.";
-        }
-        console.log("The value of role is:", role);
+  
+    if (loggedIn) { 
+      welcome = "Welcome back " + username + "! You are logged in.";
+      if (role === `employee`) {
+        employeeContent = "This is the employee content.";
+      } else if (role === `manager`) {
+        managerContent = "This is the manager content.";
+      }
+      console.log("The value of role is:", role);
     } else {
-        welcome = "Please log in.";
+      welcome = "Please log in.";
     }
-
+  
     let source = fs.readFileSync("./templates/lesson11.html");
     let template = handlebars.compile(source.toString());
     let data = {
-        cookie: cookie,
-        session: session,
-        welcome: welcome,
-        employeeContent: employeeContent,
-        managerContent: managerContent,
-        username: username,
-        contact: contact,
-        role: role
+      cookie: cookie,
+      session: session,
+      welcome: welcome,
+      employeeContent: employeeContent,
+      managerContent: managerContent,
+      username: username,
+      contact: contact,
+      role: role
     };
     result = template(data);
     return result;
-}
+  }
+  
 
 
-function authenticateUser(username, password) {
+  function authenticateUser(username, password) {
     return new Promise((resolve, reject) => {
         db.get(
             "SELECT userid, password, role FROM users WHERE username = ?",
@@ -179,7 +181,7 @@ function authenticateUser(username, password) {
                             console.log(`User ${username} logged in`);
                             resolve(row.userid);
                         } else {
-                            console.log(`Password for user ${username} is incorrect`);
+                            console.log(`User ${username} authentication failed`);
                             resolve(false);
                         }
                     });
@@ -188,6 +190,7 @@ function authenticateUser(username, password) {
         );
     });
 }
+
 
 
 function recordLogin(request, user) {
