@@ -131,38 +131,36 @@ function build_form(username, userid, contact, role, loggedIn) {
     let welcome;
     let employeeContent = "";
     let managerContent = "";
-  
-    if (loggedIn) { 
-      welcome = "Welcome back " + username + "! You are logged in.";
-      if (role === `employee`) {
-        employeeContent = "This is the employee content.";
-      } else if (role === `manager`) {
-        managerContent = "This is the manager content.";
-      }
-      console.log("The value of role is:", role);
+
+    if (loggedIn) {
+        welcome = "Welcome back " + username + "! You are logged in.";
+        if (role === `employee`) {
+            employeeContent = "This is the employee content.";
+        } else if (role === `manager`) {
+            managerContent = "This is the manager content.";
+        }
+        console.log("The value of role is:", role);
     } else {
-      welcome = "Please log in.";
+        welcome = "Please log in.";
     }
-  
+
     let source = fs.readFileSync("./templates/lesson11.html");
     let template = handlebars.compile(source.toString());
     let data = {
-      cookie: cookie,
-      session: session,
-      welcome: welcome,
-      employeeContent: employeeContent,
-      managerContent: managerContent,
-      username: username,
-      contact: contact,
-      role: role
+        cookie: cookie,
+        session: session,
+        welcome: welcome,
+        employeeContent: employeeContent,
+        managerContent: managerContent,
+        username: username,
+        contact: contact,
+        role: role
     };
     result = template(data);
     return result;
-  }
-  
+}
 
-
-  function authenticateUser(username, password) {
+function authenticateUser(username, password) {
     return new Promise((resolve, reject) => {
         db.get(
             "SELECT userid, password, role FROM users WHERE username = ?",
@@ -191,17 +189,15 @@ function build_form(username, userid, contact, role, loggedIn) {
     });
 }
 
-
-
 function recordLogin(request, user) {
-        let loginEvent = {
-            "username": user.username,
-            "timestamp": new Date(),
-        };
-        console.log("User " + user.username + " logged in at " + loginEvent.timestamp);
- 
-        console.log("Invalid username or password.");
-    
+    let loginEvent = {
+        "username": user.username,
+        "timestamp": new Date(),
+    };
+    console.log("User " + user.username + " logged in at " + loginEvent.timestamp);
+
+    console.log("Invalid username or password.");
+
 }
 
 function recordFailedLogin(request, username) {
@@ -237,8 +233,6 @@ function getUserById(userid) {
         );
     });
 }
-
-
 
 function generateHashedPassword(password) {
     // Use this function to generate hashed passwords to save in 
