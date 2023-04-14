@@ -37,13 +37,13 @@ bcrypt.hash(employeePassword, 10, function (err, hash) {
     db.run(
         "INSERT OR IGNORE INTO users (username, password, role) VALUES (?, ?, ?)",
         [employeeUsername, hash, employeeRole],
-        function (err) {
-            if (err) {
-                console.error(err.message);
-            } else {
-                console.log(`Employee user ${employeeUsername} added to the database`);
-            }
-        }
+        // function (err) {
+        //     if (err) {
+        //         console.error(err.message);
+        //     } else {
+        //         console.log(`Employee user ${employeeUsername} added to the database`);
+        //     }
+        // }
     );
 });
 
@@ -55,13 +55,13 @@ bcrypt.hash(managerPassword, 10, function (err, hash) {
     db.run(
         "INSERT OR IGNORE INTO users (username, password, role) VALUES (?, ?, ?)",
         [managerUsername, hash, managerRole],
-        function (err) {
-            if (err) {
-                console.error(err.message);
-            } else {
-                console.log(`Manager user ${managerUsername} added to the database`);
-            }
-        }
+        // function (err) {
+        //     if (err) {
+        //         console.error(err.message);
+        //     } else {
+        //         console.log(`Manager user ${managerUsername} added to the database`);
+        //     }
+        // }
     );
 });
 
