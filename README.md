@@ -45,3 +45,7 @@ In this session, I started to learn about MongoDB and Redis. MongoDB is a docume
 ## Assignment 11
 
 In this session, we started to learn about cookies and sessions. A cookie is a piece of data stored on users computer/web browser by the web browser. A session is a series of related browser requests that come from the same client during a certain time period. Cookies are stored on your computer by websites via the browser. When you revisit a site, the browser sends those cookies to that site so that the site can serve you customized information based on your previous activity on the site. During the assignment, I started to understand a little more with the use of the example code. I am still working on it, but I am excited to figure it all out. 
+
+## Assignment 12
+
+In this session, we started to learn about REST APIs. To interact with a REST API, you typically use HTTP requests such as GET, POST, PUT, and DELETE. These requests allow you to retrieve, create, update, or delete data from the API's database. Each API endpoint represents a specific piece of data, such as a user profile or as we did this assignment, a tax rate. I feel like I am learning but it is taking a lot longer than expected, and the assignments seem to be getting more difficult. I am realizing that I need to start putting more time than I already am into these assignments, and I plan to do that for final weeks of class. 
