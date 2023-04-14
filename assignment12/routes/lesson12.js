@@ -39,7 +39,8 @@ const express = require("express");
 const fs = require("fs");
 const handlebars = require('handlebars');
 const axios = require('axios');
-const sqlite3 = require("sqlite3")
+const sqlite3 = require("sqlite3");
+const { log } = require("console");
 const router = express.Router();
 
 const DATABASE = "pizza.db";
@@ -69,6 +70,7 @@ router.post("/", async (request, response) => {
     try {
         let customer_name = request.body.customer_name.trim();
         let customer_address = request.body.customer_address.trim();
+        let zipCode = request.body.zipCode.trim();
         let pizza_size = request.body.pizza_size.trim();
         let toppings = request.body.toppings.filter(Boolean).join(", ");
 
@@ -80,7 +82,7 @@ router.post("/", async (request, response) => {
         let order_id = await insertOrder(customer_name, customer_address, pizza_size);
         await insertOrderDetails(order_id, toppings);
 
-        let zip_code = customer_address.match(/\b\d{5}\b/)[0];
+        let zip_code = zipCode.match(/\b\d{5}\b/)[0];
         let tax_rate = await getTaxRate(zip_code);
         let price = await getPrice(pizza_size, toppings, zip_code, tax_rate);
 
@@ -93,11 +95,12 @@ router.post("/", async (request, response) => {
     let template = handlebars.compile(source.toString());
     let data = {
         table: await getOrderData(),
-        message: result
+        message: result,
     }
     result = template(data);
     response.send(result);
 });
+
 
 async function checkDatabase() {
     let sql = `
@@ -248,8 +251,6 @@ async function getPrice(pizza_size, toppings, zip_code) {
         mushrooms: 1,
         onions: 1,
         sausage: 1,
-        bacon: 1,
-        extra_cheese: 2,
     };
 
     let total_topping_price = 0;
