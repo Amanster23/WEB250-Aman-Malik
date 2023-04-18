@@ -49,3 +49,7 @@ In this session, we started to learn about cookies and sessions. A cookie is a p
 ## Assignment 12
 
 In this session, we started to learn about REST APIs. To interact with a REST API, you typically use HTTP requests such as GET, POST, PUT, and DELETE. These requests allow you to retrieve, create, update, or delete data from the API's database. Each API endpoint represents a specific piece of data, such as a user profile or as we did this assignment, a tax rate. I feel like I am learning but it is taking a lot longer than expected, and the assignments seem to be getting more difficult. I am realizing that I need to start putting more time than I already am into these assignments, and I plan to do that for final weeks of class. 
+
+## Assignment 13
+
+In this session, we started to learn about being able to test server-side scripts. There are two main types of automated testing. Functional testing verifies the business application of a software solution. Non-functional testing confirms additional requirements of the software, including performance, security, and storage efficiency. Different types of tests exist to perform these main testing requirements, such as smoke tests, integration tests, regression tests, security, performance, and acceptance tests. I was also introduced to Selenium IDE and got a little used to using it. Once I can figure out some parts of my project, I can now use Selenium IDE to test my ordering and checkout process. 
