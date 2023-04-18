@@ -3,7 +3,9 @@ const fs = require("fs");
 const handlebars = require('handlebars');
 const axios = require('axios');
 const sqlite3 = require("sqlite3");
-const { log } = require("console");
+const {
+    log
+} = require("console");
 const router = express.Router();
 
 const DATABASE = "pizza.db";
@@ -37,10 +39,6 @@ router.post("/", async (request, response) => {
         let pizza_size = request.body.pizza_size.trim();
         let toppings = request.body.toppings.filter(Boolean).join(", ");
 
-        // Check if any field is empty
-        if (!customer_name || !customer_address || !pizza_size || !toppings) {
-            throw new Error("All fields are required.");
-        }
 
         let order_id = await insertOrder(customer_name, customer_address, pizza_size);
         await insertOrderDetails(order_id, toppings);
@@ -48,19 +46,8 @@ router.post("/", async (request, response) => {
         let zip_code = zipCode.match(/\b\d{5}\b/)[0];
         let tax_rate = await getTaxRate(zip_code);
         let price = await getPrice(pizza_size, toppings, zip_code, tax_rate);
-
+        console.log(price) // Getting NaN as price
         result = `Thank you for your order! Your total price is $${price.toFixed(2)}.`;
-
-        // Get order data and render checkout section
-        let orderData = await getOrderData();
-        source = fs.readFileSync("./templates/checkout.html");
-        template = handlebars.compile(source.toString());
-        data = {
-            table: orderData,
-            message: result,
-        }
-        result = template(data);
-        response.send(result);
 
     } catch (error) {
         result = error;
@@ -174,7 +161,7 @@ async function insertOrderDetails(order_id, toppings) {
 // Get tax rate for a given zip code
 async function getTaxRate(zip_code) {
     try {
-        const url = `http://web250taxrates.harpercollege.edu/taxrates/IL/${zip_code}`;
+        const url = `http://web250taxrates.harpercollege.org/taxrates/IL/${zip_code}`;
         const response = await axios.get(url);
         return response.data.taxRate;
     } catch (error) {
@@ -183,17 +170,18 @@ async function getTaxRate(zip_code) {
     }
 }
 
+
 async function getPrice(pizza_size, toppings, zip_code, tax_rate) {
     // Get base price based on pizza size
     let base_price = 0;
     switch (pizza_size) {
-        case 'small':
+        case 'Small':
             base_price = 8.99;
             break;
-        case 'medium':
+        case 'Medium':
             base_price = 10.99;
             break;
-        case 'large':
+        case 'Large':
             base_price = 12.99;
             break;
         default:
@@ -202,18 +190,21 @@ async function getPrice(pizza_size, toppings, zip_code, tax_rate) {
 
     // Calculate topping price
     let topping_price = 0;
-    let toppingsArray = toppings.split(", ");
-    for (let topping of toppingsArray) {
-        topping_price += 0.99;
+    if (toppings) {
+        let topping_count = toppings.split(', ').length;
+        topping_price = topping_count * 0.99;
     }
 
     // Calculate total price with tax
-    let total_price = base_price + topping_price;
-    let tax_amount = total_price * tax_rate;
-    total_price += tax_amount;
+    let total_price = 0;
+    if (tax_rate !== 0) {
+        total_price = base_price + topping_price;
+        total_price *= (1 + tax_rate / 100);
+    }
 
     return total_price;
 }
+
 
 async function getLastInsertedId() {
     let sql = `SELECT last_insert_rowid() AS id;`;
