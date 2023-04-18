@@ -18,7 +18,7 @@ router.get("/", async (request, response) => {
         result = error;
     }
 
-    let source = fs.readFileSync("./templates/lesson12.html");
+    let source = fs.readFileSync("./templates/lesson13.html");
     let template = handlebars.compile(source.toString());
     let data = {
         table: result
@@ -50,20 +50,30 @@ router.post("/", async (request, response) => {
         let price = await getPrice(pizza_size, toppings, zip_code, tax_rate);
 
         result = `Thank you for your order! Your total price is $${price.toFixed(2)}.`;
+
+        // Get order data and render checkout section
+        let orderData = await getOrderData();
+        source = fs.readFileSync("./templates/checkout.html");
+        template = handlebars.compile(source.toString());
+        data = {
+            table: orderData,
+            message: result,
+        }
+        result = template(data);
+        response.send(result);
+
     } catch (error) {
         result = error;
+        let source = fs.readFileSync("./templates/lesson13.html");
+        let template = handlebars.compile(source.toString());
+        let data = {
+            table: await getOrderData(),
+            message: result,
+        }
+        result = template(data);
+        response.send(result);
     }
-
-    let source = fs.readFileSync("./templates/lesson12.html");
-    let template = handlebars.compile(source.toString());
-    let data = {
-        table: await getOrderData(),
-        message: result,
-    }
-    result = template(data);
-    response.send(result);
 });
-
 
 async function checkDatabase() {
     let sql = `
@@ -111,68 +121,53 @@ async function checkDatabase() {
 
 async function getOrderData() {
     let sql = `
-    SELECT 
-        Orders.ID AS OrderID, 
-        Customers.ID AS CustomerID,
-        Customers.Name AS CustomerName, 
-        Customers.Address AS CustomerAddress,
-        Orders.Size AS Size,
-        GROUP_CONCAT(OrderDetails.Topping, ', ') AS Toppings
-    FROM Orders
-    JOIN Customers ON Orders.CustomerID = Customers.ID
-    JOIN OrderDetails ON Orders.ID = OrderDetails.OrderID
-    GROUP BY Orders.ID;
-     `
+        SELECT Orders.ID, Customers.Name AS CustomerName, Customers.Address AS CustomerAddress, Orders.Size, GROUP_CONCAT(OrderDetails.Topping, ', ') AS Toppings
+        FROM Orders
+        LEFT JOIN Customers ON Orders.CustomerID = Customers.ID
+        LEFT JOIN OrderDetails ON Orders.ID = OrderDetails.OrderID
+        GROUP BY Orders.ID
+        ORDER BY Orders.ID DESC;
+    `;
     let parameters = {};
-    let rows = await sqliteAll(sql, parameters);
-
-    let result = "<table><tr><th>Order ID</th>";
-    result += "<th>Customer Name</th>";
-    result += "<th>Customer Address</th>";
-    result += "<th>Size</th>";
-    result += "<th>Toppings</th></tr>";
-    for (i = 0; i < rows.length; i++) {
-        result += "<tr><td>" + rows[i].OrderID + "</td>"
-        result += "<td>" + rows[i].CustomerID + "</td>"
-        result += "<td>" + rows[i].CustomerName + "</td>"
-        result += "<td>" + rows[i].CustomerAddress + "</td>"
-        result += "<td>" + rows[i].Size + "</td>"
-        result += "<td>" + rows[i].Toppings + "</td></tr>"
-    }
-    result += "</table>"
-    return result;
+    return await sqliteAll(sql, parameters);
 }
 
-async function insertOrder(customer_name, customer_address, pizza_size, ) {
-    // Insert customer and order data into the database
+async function insertOrder(customer_name, customer_address, pizza_size) {
     let sql = `
-            INSERT INTO Customers (Name, Address)
-            VALUES (?, ?);
-        `
-    let parameters = [customer_name, customer_address];
-    let result = await sqliteRun(sql, parameters);
-    let customer_id = result.lastID;
+        INSERT INTO Customers (Name, Address)
+        VALUES ($customer_name, $customer_address);
+    `;
+    let parameters = {
+        $customer_name: customer_name,
+        $customer_address: customer_address
+    };
+    await sqliteRun(sql, parameters);
+
+    let customerID = await getLastInsertedId();
 
     sql = `
-            INSERT INTO Orders (CustomerID, Size)
-            VALUES (?, ?);
-        `
-    parameters = [customer_id, pizza_size];
-    result = await sqliteRun(sql, parameters);
-    let order_id = result.lastID;
+        INSERT INTO Orders (CustomerID, Size)
+        VALUES ($customerID, $pizza_size);
+    `;
+    parameters = {
+        $customerID: customerID,
+        $pizza_size: pizza_size
+    };
+    await sqliteRun(sql, parameters);
 
-    return order_id;
+    return await getLastInsertedId();
 }
 
 async function insertOrderDetails(order_id, toppings) {
-    let topping_array = toppings.split(", ");
-    let sql = "";
-    let parameters = {};
-    topping_array.forEach((topping, index) => {
-        sql += 'INSERT INTO OrderDetails (OrderID, Topping) VALUES ($order_id_${index}, $topping_${index});';
-        parameters['$order_id_${index}'] = order_id;
-        parameters['$topping_${index}'] = topping;
-    });
+    let toppingsArray = toppings.split(", ");
+    let sql = `
+        INSERT INTO OrderDetails (OrderID, Topping)
+        VALUES ${toppingsArray.map(() => "(?, ?)").join(", ")};
+    `;
+    let parameters = [];
+    for (let topping of toppingsArray) {
+        parameters.push(order_id, topping);
+    }
     await sqliteRun(sql, parameters);
 }
 
@@ -188,79 +183,87 @@ async function getTaxRate(zip_code) {
     }
 }
 
-async function getPrice(pizza_size, toppings, zip_code) {
-    // Define base price based on pizza size
-    let base_price;
+async function getPrice(pizza_size, toppings, zip_code, tax_rate) {
+    // Get base price based on pizza size
+    let base_price = 0;
     switch (pizza_size) {
-        case "small":
-            base_price = 10;
+        case 'small':
+            base_price = 8.99;
             break;
-        case "medium":
-            base_price = 12;
+        case 'medium':
+            base_price = 10.99;
             break;
-        case "large":
-            base_price = 14;
-            break;
-        case "extra-large":
-            base_price = 16;
+        case 'large':
+            base_price = 12.99;
             break;
         default:
-            throw new Error(`Invalid pizza size: ${pizza_size}`);
+            throw new Error("Invalid pizza size.");
     }
 
-    // Add topping prices
-    let topping_prices = {
-        pepperoni: 1,
-        mushrooms: 1,
-        onions: 1,
-        sausage: 1,
-    };
+    // Calculate topping price
+    let topping_price = 0;
+    let toppingsArray = toppings.split(", ");
+    for (let topping of toppingsArray) {
+        topping_price += 0.99;
+    }
 
-    let total_topping_price = 0;
-    toppings.forEach((topping) => {
-        if (topping_prices[topping]) {
-            total_topping_price += topping_prices[topping];
-        }
-    });
-
-    // Add tax based on zip code
-    let tax_rate = await getTaxRate(zip_code);
-    let tax = base_price * tax_rate;
-
-    // Calculate total price
-    let total_price = base_price + total_topping_price + tax;
+    // Calculate total price with tax
+    let total_price = base_price + topping_price;
+    let tax_amount = total_price * tax_rate;
+    total_price += tax_amount;
 
     return total_price;
 }
 
-async function sqliteAll(sql, parameters) {
-    let promise = new Promise((resolve, reject) => {
-        let database = new sqlite3.Database(DATABASE);
-        database.serialize();
-        database.all(sql, parameters, function (error, rows) {
-            if (error)
-                reject(error);
-            else
-                resolve(rows);
-        });
-        database.close();
-    });
-
-    let result = await promise;
-    return result;
+async function getLastInsertedId() {
+    let sql = `SELECT last_insert_rowid() AS id;`;
+    let parameters = {};
+    let rows = await sqliteAll(sql, parameters);
+    return rows[0].id;
 }
 
-function sqliteRun(sql, parameters) {
+async function sqliteRun(sql, parameters) {
     return new Promise((resolve, reject) => {
-        let database = new sqlite3.Database(DATABASE);
-        database.run(sql, parameters, function (err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(this);
-            }
+        let db = new sqlite3.Database(DATABASE, sqlite3.OPEN_READWRITE, (error) => {
+            if (error) reject(error);
         });
-        database.close();
+
+        db.run(sql, parameters, function (error) {
+            if (error) reject(error);
+            resolve();
+        });
+
+        db.close();
+    });
+}
+
+async function sqliteAll(sql, parameters) {
+    return new Promise((resolve, reject) => {
+        let db = new sqlite3.Database(DATABASE, sqlite3.OPEN_READONLY, (error) => {
+            if (error) reject(error);
+        });
+
+        db.all(sql, parameters, (error, rows) => {
+            if (error) reject(error);
+            resolve(rows);
+        });
+
+        db.close();
+    });
+}
+
+async function sqliteGet(sql, parameters) {
+    return new Promise((resolve, reject) => {
+        let db = new sqlite3.Database(DATABASE, sqlite3.OPEN_READONLY, (error) => {
+            if (error) reject(error);
+        });
+
+        db.get(sql, parameters, (error, row) => {
+            if (error) reject(error);
+            resolve(row);
+        });
+
+        db.close();
     });
 }
 
