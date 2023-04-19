@@ -3,98 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Lesson 13</title>
+    <title>Pizza Orders</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Pizza Ordering System</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
 <body>
-    <h1>Pizza Ordering System</h1>
-    {{#if message}}
-        <p class="message">{{message}}</p>
-    {{/if}}
+    <h1>Pizza Orders</h1>
     <form method="post">
         <label for="customer_name">Customer Name:</label>
-        <input type="text" id="customer_name" name="customer_name" required>
-        <br>
+        <input type="text" name="customer_name" id="customer_name" required><br><br>
         <label for="customer_address">Customer Address:</label>
-        <input type="text" id="customer_address" name="customer_address" required>
-        <br>
-        <label for="zipCode">Zip Code:</label>
-        <input type="text" id="zipCode" name="zipCode" required>
-        <br>
+        <input type="text" name="customer_address" id="customer_address" required><br><br>
         <label for="pizza_size">Pizza Size:</label>
-        <select id="pizza_size" name="pizza_size" required>
-            <option value="Small">Small</option>
-            <option value="Medium">Medium</option>
-            <option value="Large">Large</option>
-        </select>
-        <br>
-        <fieldset>
-            <legend>Toppings:</legend>
-            <input type="checkbox" id="pepperoni" name="toppings[]" value="Pepperoni">
-            <label for="pepperoni">Pepperoni</label>
-            <br>
-            <input type="checkbox" id="mushrooms" name="toppings[]" value="Mushrooms">
-            <label for="mushrooms">Mushrooms</label>
-            <br>
-            <input type="checkbox" id="onions" name="toppings[]" value="Onions">
-            <label for="onions">Onions</label>
-            <br>
-            <input type="checkbox" id="sausage" name="toppings[]" value="Sausage">
-            <label for="sausage">Sausage</label>
-            <br>
-            <input type="checkbox" id="bacon" name="toppings[]" value="Bacon">
-            <label for="bacon">Bacon</label>
-            <br>
-            <input type="checkbox" id="cheese" name="toppings[]" value="Extra Cheese">
-            <label for="cheese">Extra Cheese</label>
-            <br>
-            <input type="checkbox" id="black_olives" name="toppings[]" value="Black Olives">
-            <label for="black_olives">Black Olives</label>
-            <br>
-            <input type="checkbox" id="green_peppers" name="toppings[]" value="Green Peppers">
-            <label for="green_peppers">Green Peppers</label>
-            <br>
-            <input type="checkbox" id="pineapple" name="toppings[]" value="Pineapple">
-            <label for="pineapple">Pineapple</label>
-            <br>
-            <input type="checkbox" id="spinach" name="toppings[]" value="Spinach">
-            <label for="spinach">Spinach</label>
-            <br>
-            <input type="checkbox" id="anchovies" name="toppings[]" value="Anchovies">
-            <label for="anchovies">Anchovies</label>
-            <br>
-        </fieldset>
-        <br>
-        <input type="submit" value="Place Order">
-        <h2>Recent Orders</h2>
-        {{#if table}}
-            <table>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Customer Name</th>
-                    <th>Customer Address</th>
-                    <th>Pizza Size</th>
-                    <th>Toppings</th>
-                </tr>
-                {{#each table}}
-                    <tr>
-                        <td>{{ID}}</td>
-                        <td>{{CustomerName}}</td>
-                        <td>{{CustomerAddress}}</td>
-                        <td>{{Size}}</td>
-                        <td>{{Toppings}}</td>
-                    </tr>
-                {{/each}}
-            </table>
-        {{else}}
-            <p>No orders found.</p>
-        {{/if}}
-    </body>
+        <select name="pizza_size" id="pizza_size" required>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select><br><br>
+        <label for="toppings">Toppings:</label><br>
+        <input type="checkbox" name="toppings" value="Pepperoni"> Pepperoni<br>
+        <input type="checkbox" name="toppings" value="Mushrooms"> Mushrooms<br>
+        <input type="checkbox" name="toppings" value="Onions"> Onions<br>
+        <input type="checkbox" name="toppings" value="Sausage"> Sausage<br>
+        <input type="checkbox" name="toppings" value="Bacon"> Bacon<br>
+        <input type="checkbox" name="toppings" value="Extra cheese"> Extra cheese<br>
+        <input type="checkbox" name="toppings" value="Black olives"> Black olives<br>
+        <input type="checkbox" name="toppings" value="Green peppers"> Green peppers<br>
+        <input type="checkbox" name="toppings" value="Pineapple"> Pineapple<br>
+        <input type="checkbox" name="toppings" value="Spinach"> Spinach<br>
+        <input type="checkbox" name="toppings" value="Tomatoes"> Tomatoes<br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <h2>Order History</h2>
+    {{{table}}}
+</body>
+
 </html>
