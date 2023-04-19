@@ -39,18 +39,19 @@ router.post("/", async (request, response) => {
         let pizza_size = request.body.pizza_size.trim();
         let toppings = request.body.toppings.filter(Boolean).join(", ");
 
-
         let order_id = await insertOrder(customer_name, customer_address, pizza_size);
         await insertOrderDetails(order_id, toppings);
 
         let zip_code = zipCode.match(/\b\d{5}\b/)[0];
         let tax_rate = await getTaxRate(zip_code);
         let price = await getPrice(pizza_size, toppings, zip_code, tax_rate);
-        console.log(price) // Getting NaN as price
-        result = `Thank you for your order! Your total price is $${price.toFixed(2)}.`;
 
     } catch (error) {
-        result = error;
+        if (error.message === "Invalid pizza size.") {
+            result = "Error: Invalid pizza size.";
+        } else {
+            result = error;
+        }
         let source = fs.readFileSync("./templates/lesson13.html");
         let template = handlebars.compile(source.toString());
         let data = {
@@ -61,6 +62,7 @@ router.post("/", async (request, response) => {
         response.send(result);
     }
 });
+
 
 async function checkDatabase() {
     let sql = `
@@ -175,13 +177,13 @@ async function getPrice(pizza_size, toppings, zip_code, tax_rate) {
     // Get base price based on pizza size
     let base_price = 0;
     switch (pizza_size) {
-        case 'Small':
+        case 'small':
             base_price = 8.99;
             break;
-        case 'Medium':
+        case 'medium':
             base_price = 10.99;
             break;
-        case 'Large':
+        case 'large':
             base_price = 12.99;
             break;
         default:
