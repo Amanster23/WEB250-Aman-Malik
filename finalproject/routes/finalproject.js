@@ -38,11 +38,12 @@ router.post("/", async (request, response) => {
     try {
         let customer_name = request.body.customer_name.trim();
         let customer_address = request.body.customer_address.trim();
+        let customer_phone = request.body.customer_phone.trim(); // Added phone number input
         let pizza_size = request.body.pizza_size.trim();
         let toppings = request.body.toppings.filter(Boolean).join(", ");
 
         // Check if any field is empty
-        if (!customer_name || !customer_address || !pizza_size || !toppings) {
+        if (!customer_name || !customer_address || !customer_phone || !pizza_size || !toppings) {
             throw new Error("All fields are required.");
         }
 
@@ -51,7 +52,7 @@ router.post("/", async (request, response) => {
         let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
         let totalPrice = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
 
-        let order_id = await insertOrder(customer_name, customer_address, pizza_size, totalPrice);
+        let order_id = await insertOrder(customer_name, customer_address, customer_phone, pizza_size, totalPrice); // Updated to include phone number
         await insertOrderDetails(order_id, toppings);
 
         result = await getOrderData();
@@ -83,7 +84,8 @@ async function checkDatabase() {
     CREATE TABLE Customers(
       ID INTEGER PRIMARY KEY AUTOINCREMENT,
       Name TEXT NOT NULL,
-      Address TEXT NOT NULL
+      Address TEXT NOT NULL,
+      Phone TEXT NOT NULL
     );
   `
     parameters = {};
@@ -120,6 +122,7 @@ async function getOrderData() {
       Customers.ID AS CustomerID,
       Customers.Name AS CustomerName,
       Customers.Address AS CustomerAddress,
+      Customers.Phone AS CustomerPhone,
       Orders.Size AS PizzaSize,
       Orders.TotalPrice AS TotalPrice,
       GROUP_CONCAT(OrderDetails.Topping, '\n') AS Toppings
@@ -134,9 +137,9 @@ async function getOrderData() {
     return JSON.stringify(rows); // Convert object to JSON string
 }
 
-async function insertOrder(customer_name, customer_address, pizza_size, total_price) {
-    let sql = 'INSERT INTO Customers(Name, Address) VALUES( ? , ? );';
-    let parameters = [customer_name, customer_address];
+async function insertOrder(customer_name, customer_address, customer_phone, pizza_size, total_price) {
+    let sql = 'INSERT INTO Customers(Name, Address, Phone) VALUES(?, ?, ?);'; // Updated to include phone number
+    let parameters = [customer_name, customer_address, customer_phone]; // Updated to include phone number
     await sqliteRun(sql, parameters);
 
     sql = 'SELECT last_insert_rowid() AS id;';
@@ -144,7 +147,7 @@ async function insertOrder(customer_name, customer_address, pizza_size, total_pr
     let rows = await sqliteAll(sql, parameters);
     let customer_id = rows[0].id;
 
-    sql = 'INSERT INTO Orders(CustomerID, Size, TotalPrice) VALUES( ? , ? , ? );';
+    sql = 'INSERT INTO Orders(CustomerID, Size, TotalPrice) VALUES(?, ?, ?);';
     parameters = [customer_id, pizza_size, total_price];
     await sqliteRun(sql, parameters);
 
