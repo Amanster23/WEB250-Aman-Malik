@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pizza Orders</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Pizza Orders</h1>
+    <form method="post">
+        <label for="customer_name">Customer Name:</label>
+        <input type="text" name="customer_name" id="customer_name" required><br><br>
+        <label for="customer_address">Customer Address:</label>
+        <input type="text" name="customer_address" id="customer_address" required><br><br>
+        <label for="pizza_size">Pizza Size:</label>
+        <select name="pizza_size" id="pizza_size" required>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select><br><br>
+        <label for="toppings">Toppings:</label><br>
+        <input type="checkbox" name="toppings" value="Pepperoni"> Pepperoni<br>
+        <input type="checkbox" name="toppings" value="Mushrooms"> Mushrooms<br>
+        <input type="checkbox" name="toppings" value="Onions"> Onions<br>
+        <input type="checkbox" name="toppings" value="Sausage"> Sausage<br>
+        <input type="checkbox" name="toppings" value="Bacon"> Bacon<br>
+        <input type="checkbox" name="toppings" value="Extra cheese"> Extra cheese<br>
+        <input type="checkbox" name="toppings" value="Black olives"> Black olives<br>
+        <input type="checkbox" name="toppings" value="Green peppers"> Green peppers<br>
+        <input type="checkbox" name="toppings" value="Pineapple"> Pineapple<br>
+        <input type="checkbox" name="toppings" value="Spinach"> Spinach<br>
+        <input type="checkbox" name="toppings" value="Tomatoes"> Tomatoes<br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <h2>Order History</h2>
+    {{{table}}}
+</body>
+
+</html>

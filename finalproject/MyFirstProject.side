@@ -1,0 +1,160 @@
+{
+  "id": "cae6b197-d3bc-4815-a868-1e2a4a9f23a0",
+  "version": "2.0",
+  "name": "MyFirstProject",
+  "url": "http://web250-env.eba-m5ttunar.us-east-2.elasticbeanstalk.com",
+  "tests": [{
+    "id": "e70ba626-dde0-4f43-bf5c-61a90d6c9c78",
+    "name": "Test1",
+    "commands": [{
+      "id": "ebb2c421-3ada-45f4-8eff-734a022913dc",
+      "comment": "",
+      "command": "open",
+      "target": "/lesson13",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1808d454-e2c9-44bc-87c0-86a8db96244a",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1056",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0c43e16d-df25-4074-9e23-7b44cd48130e",
+      "comment": "",
+      "command": "click",
+      "target": "id=customer_name",
+      "targets": [
+        ["id=customer_name", "id"],
+        ["name=customer_name", "name"],
+        ["css=#customer_name", "css:finder"],
+        ["xpath=//input[@id='customer_name']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d142a5f6-c288-4be0-b311-009da96a8f1b",
+      "comment": "",
+      "command": "type",
+      "target": "id=customer_name",
+      "targets": [
+        ["id=customer_name", "id"],
+        ["name=customer_name", "name"],
+        ["css=#customer_name", "css:finder"],
+        ["xpath=//input[@id='customer_name']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "Aman"
+    }, {
+      "id": "aaac33c4-8d1d-4fe2-832d-fa13ae6e6dd8",
+      "comment": "",
+      "command": "type",
+      "target": "id=customer_address",
+      "targets": [
+        ["id=customer_address", "id"],
+        ["name=customer_address", "name"],
+        ["css=#customer_address", "css:finder"],
+        ["xpath=//input[@id='customer_address']", "xpath:attributes"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": "Harper College"
+    }, {
+      "id": "4a70e4f6-a8ba-4e50-b2cc-1b7c143b67d4",
+      "comment": "",
+      "command": "click",
+      "target": "id=pizza_size",
+      "targets": [
+        ["id=pizza_size", "id"],
+        ["name=pizza_size", "name"],
+        ["css=#pizza_size", "css:finder"],
+        ["xpath=//select[@id='pizza_size']", "xpath:attributes"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fe184842-58ec-4df7-9684-aba820709c53",
+      "comment": "",
+      "command": "select",
+      "target": "id=pizza_size",
+      "targets": [],
+      "value": "label=Large"
+    }, {
+      "id": "8be86aaf-adc2-45b4-b601-0792bc9980e3",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(17)",
+      "targets": [
+        ["css=input:nth-child(17)", "css:finder"],
+        ["xpath=(//input[@name='toppings'])[2]", "xpath:attributes"],
+        ["xpath=//input[4]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d4dad26a-343f-4397-a63f-1a9562b5713a",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(19)",
+      "targets": [
+        ["css=input:nth-child(19)", "css:finder"],
+        ["xpath=(//input[@name='toppings'])[3]", "xpath:attributes"],
+        ["xpath=//input[5]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "56165f4d-cceb-4234-bb1f-3a751196f667",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(25)",
+      "targets": [
+        ["css=input:nth-child(25)", "css:finder"],
+        ["xpath=(//input[@name='toppings'])[6]", "xpath:attributes"],
+        ["xpath=//input[8]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c903cf9f-d0ae-4351-a062-f8292847a93d",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(29)",
+      "targets": [
+        ["css=input:nth-child(29)", "css:finder"],
+        ["xpath=(//input[@name='toppings'])[8]", "xpath:attributes"],
+        ["xpath=//input[10]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "10e49d24-8c3e-494a-87e5-586b0df6bab6",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(31)",
+      "targets": [
+        ["css=input:nth-child(31)", "css:finder"],
+        ["xpath=(//input[@name='toppings'])[9]", "xpath:attributes"],
+        ["xpath=//input[11]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "da4c3b75-9dd8-4c98-9079-e803daa99b2a",
+      "comment": "",
+      "command": "click",
+      "target": "css=input:nth-child(38)",
+      "targets": [
+        ["css=input:nth-child(38)", "css:finder"],
+        ["xpath=//input[@value='Submit']", "xpath:attributes"],
+        ["xpath=//input[14]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "7ff8298d-5479-4a66-8582-19a3d09ee702",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["e70ba626-dde0-4f43-bf5c-61a90d6c9c78"]
+  }],
+  "urls": ["http://web250-env.eba-m5ttunar.us-east-2.elasticbeanstalk.com/"],
+  "plugins": []
+}
