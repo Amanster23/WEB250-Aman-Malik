@@ -138,19 +138,33 @@ async function getOrderData() {
 }
 
 async function insertOrder(customer_name, customer_address, customer_phone, pizza_size, total_price) {
-    let sql = 'INSERT INTO Customers(Name, Address, Phone) VALUES(?, ?, ?);'; // Updated to include phone number
-    let parameters = [customer_name, customer_address, customer_phone]; // Updated to include phone number
-    await sqliteRun(sql, parameters);
-
-    sql = 'SELECT last_insert_rowid() AS id;';
-    parameters = {};
+    // Check if customer already exists in the database
+    let sql = 'SELECT ID FROM Customers WHERE Name = ? AND Address = ? AND Phone = ?;';
+    let parameters = [customer_name, customer_address, customer_phone];
     let rows = await sqliteAll(sql, parameters);
-    let customer_id = rows[0].id;
 
+    let customer_id;
+    if (rows.length > 0) {
+        customer_id = rows[0].ID;
+    } else {
+        // Insert new customer into the Customers table
+        sql = 'INSERT INTO Customers(Name, Address, Phone) VALUES(?, ?, ?);';
+        parameters = [customer_name, customer_address, customer_phone];
+        await sqliteRun(sql, parameters);
+
+        // Retrieve the ID of the newly inserted customer
+        sql = 'SELECT last_insert_rowid() AS id;';
+        parameters = {};
+        rows = await sqliteAll(sql, parameters);
+        customer_id = rows[0].id;
+    }
+
+    // Insert order information into the Orders table
     sql = 'INSERT INTO Orders(CustomerID, Size, TotalPrice) VALUES(?, ?, ?);';
     parameters = [customer_id, pizza_size, total_price];
     await sqliteRun(sql, parameters);
 
+    // Retrieve the ID of the newly inserted order
     sql = 'SELECT last_insert_rowid() AS id;';
     parameters = {};
     rows = await sqliteAll(sql, parameters);
