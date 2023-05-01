@@ -65,7 +65,7 @@ router.post("/", async (request, response) => {
           let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
           let subtotal = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
           let taxAmount = (subtotal * salesTaxRate).toFixed(2);
-          let totalPrice = (subtotal + parseFloat(taxAmount)).toFixed(2);
+          let totalPrice = (subtotal + parseFloat(taxAmount)).toFixed(2);          
   
           let order_id = await insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, taxAmount, totalPrice); // Updated to include phone number and sales tax
           await insertOrderDetails(order_id, toppings);
@@ -143,7 +143,7 @@ async function getOrderData() {
       Customers.Phone AS CustomerPhone,
       Orders.Size AS PizzaSize,
       Orders.TotalPrice AS TotalPrice,
-      GROUP_CONCAT(OrderDetails.Topping, '\n') AS Toppings
+      GROUP_CONCAT(OrderDetails.Topping, ',') AS Toppings
       FROM Orders
       LEFT JOIN Customers ON Orders.CustomerID = Customers.ID
       LEFT JOIN OrderDetails ON Orders.ID = OrderDetails.OrderID
