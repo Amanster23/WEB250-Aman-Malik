@@ -65,7 +65,7 @@ router.post("/", async (request, response) => {
           let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
           let subtotal = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
           let taxAmount = (subtotal * salesTaxRate).toFixed(2);
-          let totalPrice = (subtotal + parseFloat(taxAmount)).toFixed(2);          
+          let totalPrice = (subtotal + parseFloat(taxAmount)).toLocaleString("en-US", { style: "currency", currency: "USD" });          
   
           let order_id = await insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, taxAmount, totalPrice); // Updated to include phone number and sales tax
           await insertOrderDetails(order_id, toppings);
