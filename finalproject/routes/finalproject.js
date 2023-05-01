@@ -1,10 +1,12 @@
 const express = require("express");
 const fs = require("fs");
 const handlebars = require('handlebars');
+const axios = require('axios');
 const sqlite3 = require("sqlite3")
 const router = express.Router();
 
 const DATABASE = "pizza.db";
+const API_KEY = 'your_api_key';
 
 // Define pizza sizes and their prices
 const pizzaSizes = {
@@ -15,7 +17,7 @@ const pizzaSizes = {
 
 router.get("/", async (request, response) => {
     let result = "";
-
+    
     try {
         await checkDatabase();
         result = await getOrderData();
@@ -34,31 +36,44 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
     let result = "";
+    let salesTaxRate = 0;
 
     try {
         let customer_name = request.body.customer_name.trim();
         let customer_address = request.body.customer_address.trim();
+        let customer_zip = request.body.customer_zip.trim();
         let customer_phone = request.body.customer_phone.trim(); // Added phone number input
         let pizza_size = request.body.pizza_size.trim();
         let toppings = request.body.toppings.filter(Boolean).join(", ");
 
         // Check if any field is empty
-        if (!customer_name || !customer_address || !customer_phone || !pizza_size || !toppings) {
+        if (!customer_name || !customer_address || !customer_zip || !customer_phone || !pizza_size || !toppings) {
             throw new Error("All fields are required.");
         }
 
-        // Calculate pizza price based on size and toppings
-        let pizzaPrice = pizzaSizes[pizza_size];
-        let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
-        let totalPrice = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
+        // Retrieve sales tax rate from API
+        let response = await axios.get(`http://web250taxrates.harpercollege.org/taxrates/IL/${customer_zip}`, {
+            headers: {
+                Authorization: `Basic ${Buffer.from(API_KEY).toString('base64')}`
+            }
+        });
 
-        let order_id = await insertOrder(customer_name, customer_address, customer_phone, pizza_size, totalPrice); // Updated to include phone number
-        await insertOrderDetails(order_id, toppings);
+        salesTaxRate = response.data.totalRate;
 
-        result = await getOrderData();
-    } catch (error) {
-        result = error;
-    }
+          // Calculate pizza price based on size and toppings
+          let pizzaPrice = pizzaSizes[pizza_size];
+          let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
+          let subtotal = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
+          let taxAmount = (subtotal * salesTaxRate).toFixed(2);
+          let totalPrice = (subtotal + parseFloat(taxAmount)).toFixed(2);
+  
+          let order_id = await insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, taxAmount, totalPrice); // Updated to include phone number and sales tax
+          await insertOrderDetails(order_id, toppings);
+  
+          result = await getOrderData();
+      } catch (error) {
+          result = error;
+      }
 
     let source = fs.readFileSync("./templates/finalproject.html");
     let template = handlebars.compile(source.toString());
@@ -85,6 +100,7 @@ async function checkDatabase() {
       ID INTEGER PRIMARY KEY AUTOINCREMENT,
       Name TEXT NOT NULL,
       Address TEXT NOT NULL,
+      Zip TEXT NOT NULL,
       Phone TEXT NOT NULL
     );
   `
@@ -93,11 +109,13 @@ async function checkDatabase() {
 
     sql = `
     CREATE TABLE Orders(
-      ID INTEGER PRIMARY KEY AUTOINCREMENT,
-      CustomerID INTEGER NOT NULL,
-      Size TEXT NOT NULL,
-      TotalPrice REAL NOT NULL,
-      FOREIGN KEY (CustomerID) REFERENCES Customers(ID)
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        CustomerID INTEGER NOT NULL,
+        Size TEXT NOT NULL,
+        Subtotal REAL NOT NULL,
+        TaxAmount REAL NOT NULL,
+        TotalPrice REAL NOT NULL,
+        FOREIGN KEY (CustomerID) REFERENCES Customers(ID)
     );
   `
     parameters = {};
@@ -137,10 +155,10 @@ async function getOrderData() {
     return JSON.stringify(rows); // Convert object to JSON string
 }
 
-async function insertOrder(customer_name, customer_address, customer_phone, pizza_size, total_price) {
+async function insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, tax_amount, total_price)  {
     // Check if customer already exists in the database
-    let sql = 'SELECT ID FROM Customers WHERE Name = ? AND Address = ? AND Phone = ?;';
-    let parameters = [customer_name, customer_address, customer_phone];
+    let sql = 'SELECT ID FROM Customers WHERE Name = ? AND Address = ? AND Phone = ? AND Zip = ?;';
+    let parameters = [customer_name, customer_address, customer_phone, customer_zip];
     let rows = await sqliteAll(sql, parameters);
 
     let customer_id;
@@ -148,30 +166,19 @@ async function insertOrder(customer_name, customer_address, customer_phone, pizz
         customer_id = rows[0].ID;
     } else {
         // Insert new customer into the Customers table
-        sql = 'INSERT INTO Customers(Name, Address, Phone) VALUES(?, ?, ?);';
-        parameters = [customer_name, customer_address, customer_phone];
-        await sqliteRun(sql, parameters);
-
-        // Retrieve the ID of the newly inserted customer
-        sql = 'SELECT last_insert_rowid() AS id;';
-        parameters = {};
-        rows = await sqliteAll(sql, parameters);
-        customer_id = rows[0].id;
+        sql = 'INSERT INTO Customers(Name, Address, Phone, Zip) VALUES (?, ?, ?, ?);';
+        parameters = [customer_name, customer_address, customer_phone, customer_zip];
+        let result = await sqliteRun(sql, parameters);
+        customer_id = result.lastID;
     }
 
-    // Insert order information into the Orders table
-    sql = 'INSERT INTO Orders(CustomerID, Size, TotalPrice) VALUES(?, ?, ?);';
-    parameters = [customer_id, pizza_size, total_price];
-    await sqliteRun(sql, parameters);
-
-    // Retrieve the ID of the newly inserted order
-    sql = 'SELECT last_insert_rowid() AS id;';
-    parameters = {};
-    rows = await sqliteAll(sql, parameters);
-    let order_id = rows[0].id;
-
-    return order_id;
+    // Insert order into the Orders table
+    sql = 'INSERT INTO Orders(CustomerID, Size, Subtotal, TaxAmount, TotalPrice) VALUES (?, ?, ?, ?, ?);';
+    parameters = [customer_id, pizza_size, subtotal, tax_amount, total_price];
+    let result = await sqliteRun(sql, parameters);
+    return result.lastID;
 }
+
 
 async function insertOrderDetails(order_id, toppings) {
     let toppingsArray = toppings.split(",").map(topping => topping.trim()).filter(Boolean);

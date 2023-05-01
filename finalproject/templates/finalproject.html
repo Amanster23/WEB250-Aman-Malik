@@ -13,34 +13,41 @@
         <label for="customer_name">Name:</label>
         <input type="text" name="customer_name" id="customer_name" required>
         <br><br>
+
         <label for="customer_address">Address:</label>
         <input type="text" name="customer_address" id="customer_address" required>
         <br><br>
-        <label for="zip_code">Zip Code:</label>
-        <input type="text" name="zipCode" required>
+
+        <label for="customer_zip">Zip Code:</label>
+        <input type="text" name="customer_zip" id="customer_zip" required>
         <br><br>
+
         <label for="customer_phone">Phone:</label>
         <input type="tel" id="customer_phone" name="customer_phone" required>
         <br><br>
-        <label for="pizza_size">Pizza Size:</label>
-        <select name="pizza_size" id="pizza_size" required>
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
+
+        <label for="pizza_size">Size:</label>
+        <select id="pizza_size" name="pizza_size" required>
+            <option value="">-- Select size --</option>
+            <option value="small">Small ($8.99)</option>
+            <option value="medium">Medium ($10.99)</option>
+            <option value="large">Large ($12.99)</option>
         </select><br><br>
+
         <label for="toppings">Toppings:</label><br>
-        <input type="checkbox" name="toppings" value="Pepperoni"> Pepperoni<br>
-        <input type="checkbox" name="toppings" value="Mushrooms"> Mushrooms<br>
-        <input type="checkbox" name="toppings" value="Onions"> Onions<br>
-        <input type="checkbox" name="toppings" value="Sausage"> Sausage<br>
-        <input type="checkbox" name="toppings" value="Bacon"> Bacon<br>
-        <input type="checkbox" name="toppings" value="Extra cheese"> Extra cheese<br>
-        <input type="checkbox" name="toppings" value="Black olives"> Black olives<br>
-        <input type="checkbox" name="toppings" value="Green peppers"> Green peppers<br>
-        <input type="checkbox" name="toppings" value="Pineapple"> Pineapple<br>
-        <input type="checkbox" name="toppings" value="Spinach"> Spinach<br>
-        <input type="checkbox" name="toppings" value="Tomatoes"> Tomatoes<br><br>
-        <input type="submit" value="Submit">
+        <input type="checkbox" name="toppings[]" value="pepperoni">Pepperoni<br>
+        <input type="checkbox" name="toppings[]" value="mushrooms">Mushrooms<br>
+        <input type="checkbox" name="toppings[]" value="onions">Onions<br>
+        <input type="checkbox" name="toppings[]" value="sausage">Sausage<br>
+        <input type="checkbox" name="toppings[]" value="bacon">Bacon<br>
+        <input type="checkbox" name="toppings[]" value="extra cheese">Extra cheese<br>
+        <input type="checkbox" name="toppings[]" value="black olives">Black olives<br>
+        <input type="checkbox" name="toppings[]" value="green peppers">Green peppers<br>
+        <input type="checkbox" name="toppings[]" value="pineapple">Pineapple<br>
+        <input type="checkbox" name="toppings[]" value="spinach">Spinach<br>
+        <input type="checkbox" name="toppings[]" value="tomatoes">Tomatoes<br><br>
+        
+        <button type="submit">Place Order</button>
     </form>
     <h2>Order History</h2>
     {{{table}}}
