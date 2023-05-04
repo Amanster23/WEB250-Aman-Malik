@@ -53,3 +53,7 @@ In this session, we started to learn about REST APIs. To interact with a REST AP
 ## Assignment 13
 
 In this session, we started to learn about being able to test server-side scripts. There are two main types of automated testing. Functional testing verifies the business application of a software solution. Non-functional testing confirms additional requirements of the software, including performance, security, and storage efficiency. Different types of tests exist to perform these main testing requirements, such as smoke tests, integration tests, regression tests, security, performance, and acceptance tests. I was also introduced to Selenium IDE and got a little used to using it. Once I can figure out some parts of my project, I can now use Selenium IDE to test my ordering and checkout process. 
+
+## Final Project
+
+This project provided a comprehensive understanding of server-side scripting, and how to develop a functional and secure web application. Through the use of a database, REST API, and validation scripts, the project demonstrated how to create a robust and scalable web application that met the requirements of customers, staff, and managers. The skills gained from this project will be valuable in educational goals and career opportunities, particularly in web development.
