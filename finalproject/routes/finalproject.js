@@ -6,7 +6,6 @@ const sqlite3 = require("sqlite3")
 const router = express.Router();
 
 const DATABASE = "pizza.db";
-const API_KEY = 'your_api_key';
 
 // Define pizza sizes and their prices
 const pizzaSizes = {
@@ -17,7 +16,7 @@ const pizzaSizes = {
 
 router.get("/", async (request, response) => {
     let result = "";
-    
+
     try {
         await checkDatabase();
         result = await getOrderData();
@@ -51,29 +50,29 @@ router.post("/", async (request, response) => {
             throw new Error("All fields are required.");
         }
 
-        // Retrieve sales tax rate from API
-        let response = await axios.get(`http://web250taxrates.harpercollege.org/taxrates/IL/${customer_zip}`, {
-            headers: {
-                Authorization: `Basic ${Buffer.from(API_KEY).toString('base64')}`
-            }
+        // // Retrieve sales tax rate from API
+        // let response = await axios.get(`http://web250taxrates.harpercollege.org/taxrates/IL/${customer_zip}`, {
+        // });
+
+        // salesTaxRate = response.data.totalRate;
+
+        // Calculate pizza price based on size and toppings
+        let pizzaPrice = pizzaSizes[pizza_size];
+        let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
+        let subtotal = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
+        let taxAmount = (subtotal * salesTaxRate).toFixed(2);
+        let totalPrice = (subtotal + parseFloat(taxAmount)).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
         });
 
-        salesTaxRate = response.data.totalRate;
+        let order_id = await insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, taxAmount, totalPrice); // Updated to include phone number and sales tax
+        await insertOrderDetails(order_id, toppings);
 
-          // Calculate pizza price based on size and toppings
-          let pizzaPrice = pizzaSizes[pizza_size];
-          let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
-          let subtotal = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
-          let taxAmount = (subtotal * salesTaxRate).toFixed(2);
-          let totalPrice = (subtotal + parseFloat(taxAmount)).toLocaleString("en-US", { style: "currency", currency: "USD" });          
-  
-          let order_id = await insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, taxAmount, totalPrice); // Updated to include phone number and sales tax
-          await insertOrderDetails(order_id, toppings);
-  
-          result = await getOrderData();
-      } catch (error) {
-          result = error;
-      }
+        result = await getOrderData();
+    } catch (error) {
+        result = error;
+    }
 
     let source = fs.readFileSync("./templates/finalproject.html");
     let template = handlebars.compile(source.toString());
@@ -83,6 +82,7 @@ router.post("/", async (request, response) => {
     result = template(data);
     response.send(result);
 });
+
 
 async function checkDatabase() {
     let sql = `
@@ -155,7 +155,7 @@ async function getOrderData() {
     return JSON.stringify(rows); // Convert object to JSON string
 }
 
-async function insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, tax_amount, total_price)  {
+async function insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, tax_amount, total_price) {
     // Check if customer already exists in the database
     let sql = 'SELECT ID FROM Customers WHERE Name = ? AND Address = ? AND Phone = ? AND Zip = ?;';
     let parameters = [customer_name, customer_address, customer_phone, customer_zip];
