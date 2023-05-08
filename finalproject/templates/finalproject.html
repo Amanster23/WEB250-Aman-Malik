@@ -5,12 +5,20 @@
     <meta charset="UTF-8">
     <title>Pizza Orders</title>
     <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+        text-align: center;
+    }
+    .bold {
+        font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
     <h1>Pizza Orders:</h1>
     <form method="post">
-        <label>Size:</label><br>
+        <label class="bold">Size:</label><br>
         <input type="radio" id="small" name="pizza_size" value="small" required>
         <label for="small">Small ($8.99)</label><br>
         <input type="radio" id="medium" name="pizza_size" value="medium">
@@ -19,7 +27,7 @@
         <label for="large">Large ($12.99)</label><br><br>
 
 
-        <label for="toppings">Toppings:</label><br>
+        <label class="bold" for="toppings">Toppings:</label><br>
         <input type="checkbox" name="toppings[]" value="pepperoni">Pepperoni<br>
         <input type="checkbox" name="toppings[]" value="mushrooms">Mushrooms<br>
         <input type="checkbox" name="toppings[]" value="onions">Onions<br>
@@ -32,25 +40,25 @@
         <input type="checkbox" name="toppings[]" value="spinach">Spinach<br>
         <input type="checkbox" name="toppings[]" value="tomatoes">Tomatoes<br><br>
 
-        <label for="customer_name">Name:</label>
+        <label class="bold" for="customer_name">Name:</label>
         <input type="text" name="customer_name" id="customer_name" required>
         <br><br>
 
-        <label for="customer_address">Address:</label>
+        <label class="bold" for="customer_address">Address:</label>
         <input type="text" name="customer_address" id="customer_address" required>
         <br><br>
 
-        <label for="customer_zip">Zip Code:</label>
+        <label class="bold" for="customer_zip">Zip Code:</label>
         <input type="text" name="customer_zip" id="customer_zip" required>
         <br><br>
 
-        <label for="customer_phone">Phone:</label>
+        <label class="bold" for="customer_phone">Phone:</label>
         <input type="tel" id="customer_phone" name="customer_phone" required>
         <br><br>
 
         <button type="submit">Place Order</button>
     </form>
-    <h2>Order History</h2>
+    <h2 class="bold">Order History</h2>
     {{{table}}}
 </body>
 
