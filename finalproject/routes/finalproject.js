@@ -42,50 +42,32 @@ router.post("/", async (request, response) => {
         let customer_address = request.body.customer_address.trim();
         let customer_zip = request.body.customer_zip.trim();
         let customer_phone = request.body.customer_phone.trim(); // Added phone number input
-        let pizza_sizes = request.body.pizza_size;
-        let toppings_array = request.body.toppings;
+        let pizza_size = request.body.pizza_size.trim();
+        let toppings = request.body.toppings.filter(Boolean).join(", ");
 
         // Check if any field is empty
-        if (!customer_name || !customer_address || !customer_zip || !customer_phone || !pizza_sizes || !toppings_array) {
+        if (!customer_name || !customer_address || !customer_zip || !customer_phone || !pizza_size || !toppings) {
             throw new Error("All fields are required.");
         }
 
-        // Retrieve sales tax rate from API
-        let response = await axios.get(`http://web250taxrates.harpercollege.org/taxrates/IL/${customer_zip}`);
+        // // Retrieve sales tax rate from API
+        // let response = await axios.get(`http://web250taxrates.harpercollege.org/taxrates/IL/${customer_zip}`, {
+        // });
 
-        salesTaxRate = response.data.totalRate;
+        // salesTaxRate = response.data.totalRate;
 
-        let orders = [];
+        // Calculate pizza price based on size and toppings
+        let pizzaPrice = pizzaSizes[pizza_size];
+        let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
+        let subtotal = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
+        let taxAmount = (subtotal * salesTaxRate).toFixed(2);
+        let totalPrice = (subtotal + parseFloat(taxAmount)).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+        });
 
-        // Calculate pizza price based on size and toppings for each pizza order
-        for (let i = 0; i < pizza_sizes.length; i++) {
-            let pizzaPrice = pizzaSizes[pizza_sizes[i]];
-            let toppings = toppings_array[i].filter(Boolean).join(", ");
-            let toppingPrices = toppings.split(",").map(topping => topping.trim() !== "" ? 0.99 : 0);
-            let subtotal = pizzaPrice + toppingPrices.reduce((acc, price) => acc + price, 0);
-            let taxAmount = (subtotal * salesTaxRate).toFixed(2);
-            let totalPrice = (subtotal + parseFloat(taxAmount)).toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD"
-            });
-
-            orders.push({
-                pizza_size: pizza_sizes[i],
-                toppings: toppings,
-                subtotal: subtotal,
-                taxAmount: taxAmount,
-                totalPrice: totalPrice
-            });
-        }
-
-        let customer_id = await insertCustomer(customer_name, customer_address, customer_phone, customer_zip);
-        
-        // Insert each pizza order into the Orders table
-        for (let i = 0; i < orders.length; i++) {
-            let order = orders[i];
-            let order_id = await insertOrder(customer_id, order.pizza_size, order.subtotal, order.taxAmount, order.totalPrice);
-            await insertOrderDetails(order_id, order.toppings);
-        }
+        let order_id = await insertOrder(customer_name, customer_address, customer_phone, customer_zip, pizza_size, subtotal, taxAmount, totalPrice); // Updated to include phone number and sales tax
+        await insertOrderDetails(order_id, toppings);
 
         result = await getOrderData();
     } catch (error) {
@@ -100,6 +82,7 @@ router.post("/", async (request, response) => {
     result = template(data);
     response.send(result);
 });
+
 
 async function checkDatabase() {
     let sql = `
